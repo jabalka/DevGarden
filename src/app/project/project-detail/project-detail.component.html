@@ -1,0 +1,31 @@
+<div class="project-card">
+  <div class="project-info">
+    <label>Title:</label>
+    <span>{{ project.title }}</span>
+  </div>
+  <div class="project-info">
+    <label>Code Snippet:</label>
+    <span>{{ project.code }}</span>
+  </div>
+  <div class="project-info">
+    <label>Language:</label>
+    <span>{{ project.language }}</span>
+  </div>
+  <div class="project-info">
+    <label>Created At:</label>
+    <span>{{ project.createdAt | date }}</span>
+  </div>
+  <div class="project-info">
+    <label>Publisher:</label>
+    <span>{{ owner.username }}</span>
+  </div>
+
+  <div class="control-buttons">
+    <ul *ngIf="(isOwner)">
+    <button (click)="deleteProject(project._id.toString())">Delete</button>
+    <button (click)="navigateToEditProject(project._id.toString())">
+      Edit
+    </button>
+    </ul>
+  </div>
+</div>

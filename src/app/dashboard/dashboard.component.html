@@ -1,1 +1,36 @@
-<p>dashboard works!</p>
+<p>Dashboard works!</p>
+
+<div>Total Projects: {{ totalProjects }}</div>
+
+<div class="pagination-controls">
+  <button (click)="goToPreviousPage()" [disabled]="currentPage <= 1">Previous</button>
+  <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <button (click)="goToNextPage()" [disabled]="currentPage * pageSize >= totalProjects">Next</button>
+</div>
+
+<div class="dashboard-projects">
+  <div class="project-card" *ngFor="let project of projects">
+    <div class="project-info">
+      <label>Title:</label>
+      <span>{{ project?.title }}</span>
+    </div>
+    <div class="project-info">
+      <label>Code Snippet:</label>
+      <span>{{ project?.code }}</span>
+    </div>
+    <div class="project-info">
+      <label>Language:</label>
+      <span>{{ project?.language }}</span>
+    </div>
+    <div class="project-info">
+      <label>Created At:</label>
+      <span>{{ project?.createdAt | date }}</span>
+    </div>
+
+    <div class="control-buttons">
+      <!-- <button (click)="deleteProject(project._id.toString())">Delete</button>
+      <button (click)="navigateToEditProject(project._id.toString())">Edit</button> -->
+      <button (click)="navigateToDetail(project._id.toString())">Detail</button>
+    </div>
+  </div>
+</div>
