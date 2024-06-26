@@ -8,10 +8,10 @@
       <div class="mini-navbar">
         <ul *ngIf="!(isLogged$ | async)">
           <li>
-            <a routerLink="/user/login">Login</a>
+            <a routerLink="/login">Login</a>
           </li>
           <li>
-            <a routerLink="/user/register">Register</a>
+            <a routerLink="/register">Register</a>
           </li>
         </ul>
         <ul *ngIf="isLogged$ | async">

@@ -1,16 +1,14 @@
 import { createReducer, on } from '@ngrx/store';
 import { authenticate, login, logout, register, setUser, setUserFailure, setUserSuccess, updateUser } from './actions';
-import { IUser } from '../user/user.model';
-
-
-
+import { IUser } from '../../user/user.model';
+// AUTH STATE AND REDUCERS ---------------------
 export interface IAuthState {
-    currentUser: IUser | null | undefined;
+    currentUser: IUser | null;
     error: any;
 }
 
 export const initialState: IAuthState = {
-    currentUser: undefined,
+    currentUser: null,
     error: null
 };
 
@@ -25,6 +23,7 @@ const setCurrentUser = (
     return {...state, currentUser: action.user};
 }
 
+
 export const authReducer = createReducer<IAuthState>(
     initialState,
     // since on all the 3 actions need to be done the same this arrow function
@@ -37,7 +36,9 @@ export const authReducer = createReducer<IAuthState>(
     on(authenticate, setCurrentUser),
     on(updateUser, setCurrentUser),
     on(setUserSuccess, setCurrentUser),
-    on(logout, (state, action) => {return {...state, setCurrentUser: null}}),
+    on(logout, (state, action) => {return {...state, currentUser: null}}),
     on(setUserFailure, (state, {error}) => ({...state, error}))
 
 )
+
+

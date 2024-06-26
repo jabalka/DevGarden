@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Project, ProjectResponse } from '../project/project.model';
 import { Router } from '@angular/router';
 import { ProjectService } from '../project/project.service';
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit  {
   constructor(
     private projectService: ProjectService,
     private userService: UserService,
-    private router: Router,
+    @Inject(Router) private router: Router,
   ){
     this.projects = [];
 

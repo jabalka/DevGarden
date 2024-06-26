@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Project, ProjectResponse } from '../project.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../project.service';
@@ -6,44 +6,85 @@ import { UserService } from '../../user/user.service';
 import { IUser, UserModel } from '../../user/user.model';
 import { AuthService } from '../../core/auth.service';
 import { State, Store, select } from '@ngrx/store';
-import { IRootState } from '../../+store';
-import { Observable } from 'rxjs';
-import { selectCurrentUser } from '../../+store/selectors';
+import { Observable, Subscription } from 'rxjs';
+import { loadOwner } from '../../+store/owner/actions';
+import { IAppState } from '../../+store';
+import { selectProjectOwner } from '../../+store/owner/selectors';
+import { selectCurrentUser } from '../../+store/auth/selectors';
+import { setUser } from '../../+store/auth/actions';
 
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
-  styleUrl: './project-detail.component.css'
+  styleUrl: './project-detail.component.css',
 })
-export class ProjectDetailComponent implements OnInit{
+export class ProjectDetailComponent implements OnInit, OnDestroy{
 
   project!: Project;
   totalProjects!: number;
   ownerTotalProjects!: Project[];
-  owner: UserModel = {} as UserModel;
+  projectOwner : UserModel = {} as UserModel;
+  projectOwnerSubscription?: Subscription;
   isOwner: boolean = false;
-  currentUser$: Observable<IUser | null | undefined>;
+  currentUser?: IUser | null;
+  currentUserSubscription?: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
+    @Inject(ActivatedRoute) private route: ActivatedRoute,
     private projectService: ProjectService,
-    private userService: UserService,
-    private authService: AuthService,
-    private router: Router,
-    private state: State<IUser>,
-    private store: Store<IRootState>
+    @Inject(Router) private router: Router,
+    private store: Store<IAppState>
   ){
-    this.currentUser$ = this.store.pipe(select(selectCurrentUser))
-  }
+
+    // this.projectOwner = this.store.pipe(select(selectProjectOwner));
+    // this.currentUser$ = this.store.pipe(select(selectCurrentUser));
+    }
 
   ngOnInit(): void {
     this.getProject();
-    this.currentUser$.subscribe(user => {
+    this.currentUserSubscription = this.store.pipe(select(selectCurrentUser))
+    .subscribe(user => {
       if(user){
+        this.store.dispatch(setUser());
+        console.log("this.currentUser$ ln43:")
+        this.currentUser = user;
         this.verifyOwner(user._id.toString());
+      } else {
+        this.isOwner = false;
       }
-    })
+    });
+    console.log('projectOwner:', this.projectOwner, '\n', 'currentUser:', this.currentUser, '\n', 'isOwner:', this.isOwner)
+
+    // this.authService.authenticate().subscribe(user => {
+    //   if(user){
+    //     this.currentUser$ = user;
+    //     console.log("this.currentUser$ ln43:",this.currentUser$)
+    //     this.verifyOwner(user._id.toString());
+    //   } else {
+    //     this.isOwner = false;
+    //   }
+    // })
+
+
+      
+    // this.currentUser$.subscribe(user => {
+    //   console.log("ln50:", user)
+    //   if(user){
+    //     this.verifyOwner(user._id.toString());
+    //   } else {
+    //     this.isOwner = false;
+    //   }
+    // })
    
+  }
+
+  ngOnDestroy(): void {
+    if(this.currentUserSubscription){
+      this.currentUserSubscription.unsubscribe();
+    }
+    if(this.projectOwnerSubscription){
+      this.projectOwnerSubscription.unsubscribe();
+    }
   }
 
   getProject(): void {
@@ -55,47 +96,36 @@ export class ProjectDetailComponent implements OnInit{
           this.ownerTotalProjects = response.projects,
           this.totalProjects = response.totalProjects,
            this.getOwner();
-
         },
       error => console.error('Error fetching project:', error));
     }
   }
 
-  verifyOwner(userId: string){
-    console.log('ln 65: userId:', userId)
-    this.isOwner = this.project.owner.toString() === userId;
-    console.log('ln 67: isOwner:', this.isOwner)
-
-  }   
-
-  //   verifyOwner(projectId: string, userId: string){
-  //   this.project._id
-
-  //   this.authService.authenticate().subscribe(user => {
-  //     console.log('project-detail ln 51:', user)
-  //     if(user !== null){
-  //       this.projectService.getProjectById(projectId).subscribe(project => {
-  //         this.isOwner = project.project.owner.toString() === user._id;
-  //         console.log(` project-detail ln57., Is owner: ${this.isOwner}`);
-  //       });
-  //     } else {
-  //       console.log(` project-detail ln61., Is owner: ${this.isOwner}`);
-  //     }
-      
-  //   });
-  // }   
+  verifyOwner(userId: string): void {
+    if (this.project) {
+        this.isOwner = this.project.owner.toString() === userId;
+        console.log('project-detail --ln107-- User ID:', userId);
+        console.log('project-detail --ln108-- Project Owner:', this.project.owner.toString());
+        console.log('project-detail --ln109-- Is Owner:', this.isOwner);
+    }
+}
+ 
 
   
   getOwner() {
     const ownerId = this.project.owner.toString();
-    this.userService.getUser(ownerId).subscribe(
-      (user: UserModel) => {
-        Object.assign(this.owner, user)
-        // get just the first part of the email to use as greeting------
-        this.owner.username = user.email.split('@')[0];
-      },
-      error => console.error('Error fetching owner:', error)
-    );
+    this.store.dispatch(loadOwner({userId : ownerId}));
+    this.projectOwnerSubscription = this.store.pipe(select(selectProjectOwner))
+    .subscribe(
+      (owner: UserModel | null) => {
+        if(owner){
+          Object.assign(this.projectOwner, owner)
+                   // get just the first part of the email to use as greeting------
+            this.projectOwner.username = owner.email.split('@')[0];
+        }
+    },
+    error => console.error('Error fetching owner:', error)
+  );
   }
 
   deleteProject(projectId: string): void {

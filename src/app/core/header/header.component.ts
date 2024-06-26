@@ -21,11 +21,11 @@ export class HeaderComponent implements OnDestroy, OnInit {
     private router: Router
     ){
       this.isLogged$.subscribe(isLogged => {
-        console.log('isLogged ln24:',isLogged);
+        console.log('header.component---isLogged ln24:',isLogged);
       });
 
       this.isReady$.subscribe(isReady => {
-        console.log('isReady ln28:',isReady);
+        console.log('header.component---isReady ln28:',isReady);
       });
   }
 

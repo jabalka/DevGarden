@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
-import { IRootState } from '../+store';
+import { IAuthUserState } from '../+store/auth';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { IUser, UserModel } from '../user/user.model';
-import { authenticate, login, logout, register } from '../+store/actions';
-import { authReducer } from '../+store/reducers';
+import { authenticate, login, logout, register } from '../+store/auth/actions';
+import { authReducer } from '../+store/auth/reducers';
 
 const apiUrl = environment.apiUrl;
 
@@ -23,18 +23,18 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private store: Store<IRootState>
+    private store: Store<IAuthUserState>
   ) { }
 
   login(data: any): Observable<any> {
-    return this.http.post<IUser>(apiUrl + 'user/login', data, {withCredentials: true}).pipe(
-      tap((user: IUser) => this.store.dispatch(login({user})))
+    return this.http.post<UserModel>(apiUrl + 'user/login', data, {withCredentials: true}).pipe(
+      tap((user: UserModel) => this.store.dispatch(login({user})))
     );
   };
 
   register(data: any): Observable<any> {
-    return this.http.post<IUser>(apiUrl + 'user/register', data, {withCredentials: true}).pipe(
-      tap((user: IUser) => this.store.dispatch(register({ user})))
+    return this.http.post<UserModel>(apiUrl + 'user/register', data, {withCredentials: true}).pipe(
+      tap((user: UserModel) => this.store.dispatch(register({ user})))
     );
   };
 
@@ -45,10 +45,15 @@ export class AuthService {
   }
 
   authenticate(): Observable<any> {
-    return this.http.get<IUser>(apiUrl + 'user/profile', {withCredentials: true}).pipe(
-      tap((user: IUser) => this.store.dispatch(authenticate({user}))),
-      catchError(() => {
-        this.store.dispatch(authenticate({user: null}));
+    return this.http.get<UserModel>(apiUrl + 'user/profile', {withCredentials: true}).pipe(
+      tap((user: UserModel) => this.store.dispatch(authenticate({user}))),
+      catchError((error) => {
+        if(error.status === 401){
+          this.store.dispatch(authenticate({ user: null }));
+        } else {
+          console.log('auth.service., ln51 - Authentication error:', error)
+          this.store.dispatch(authenticate({user: null}));
+        }
         return of(null);
       })
     )

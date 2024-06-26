@@ -1,7 +1,7 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { IAuthState } from './reducers';
 
-export const selectUserState = createFeatureSelector<IAuthState>('user');
+export const selectUserState = createFeatureSelector<IAuthState>('auth');
 
 export const selectCurrentUser = createSelector(
   selectUserState,
@@ -12,3 +12,4 @@ export const selectUserError = createSelector(
   selectUserState,
   (state: IAuthState) => state.error
 );
+
