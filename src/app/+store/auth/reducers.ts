@@ -1,9 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
-import { authenticate, login, logout, register, setUser, setUserFailure, setUserSuccess, updateUser } from './actions';
-import { IUser } from '../../user/user.model';
+import { authenticate, clearUserData, login, logout, register, setUser, setUserFailure, setUserSuccess, updateUser } from './actions';
+import { IUser, UserModel } from '../../user/user.model';
 // AUTH STATE AND REDUCERS ---------------------
 export interface IAuthState {
-    currentUser: IUser | null;
+    currentUser: UserModel | null;
     error: any;
 }
 
@@ -16,11 +16,47 @@ const setCurrentUser = (
     state: IAuthState,
     action: ReturnType<typeof login> |
      ReturnType<typeof register> |
-     ReturnType<typeof authenticate> |
-     ReturnType<typeof updateUser> |
      ReturnType<typeof setUserSuccess>
 ) => {
-    return {...state, currentUser: action.user};
+    const newState = {...state, currentUser: action.user, error: null};
+    localStorage.setItem('authState', JSON.stringify(newState));
+    localStorage.setItem('currentUser', JSON.stringify(action.user));
+    return  newState;
+}
+
+const updateCurrentUser = (
+    state: IAuthState,
+    action: ReturnType<typeof updateUser>
+) => {
+    const newState = {...state, currentUser: action.user, error: null};
+    localStorage.removeItem('authState');
+    localStorage.setItem('currentUser', JSON.stringify(action.user));
+    localStorage.setItem('authState', JSON.stringify(newState));
+    return newState;
+}
+
+const authenticateUser = (
+    state: IAuthState,
+    action: ReturnType<typeof authenticate>
+) => {
+    const storedState = localStorage.getItem('authState');
+    if(storedState){
+        const parsedState = JSON.parse(storedState);
+        if(parsedState.currentUser){
+            return {...state, currentUser: parsedState.currentUser, error: null};
+        }
+    }
+    return {...state, currentUser:null, error: null}; 
+}
+
+const clearUser = (
+    state: IAuthState,
+    action: ReturnType<typeof clearUserData> |
+    ReturnType<typeof logout> 
+) => {
+    localStorage.removeItem('authState');
+    localStorage.removeItem('currentUser');
+    return {...state, currentUser: null, error: null};
 }
 
 
@@ -33,11 +69,16 @@ export const authReducer = createReducer<IAuthState>(
     // })
     on(login, setCurrentUser),
     on(register, setCurrentUser),
-    on(authenticate, setCurrentUser),
-    on(updateUser, setCurrentUser),
     on(setUserSuccess, setCurrentUser),
-    on(logout, (state, action) => {return {...state, currentUser: null}}),
-    on(setUserFailure, (state, {error}) => ({...state, error}))
+    on(updateUser, updateCurrentUser),
+    on(authenticate, authenticateUser),
+    on(logout, clearUser),
+    on(clearUserData, clearUser),
+    on(setUserFailure, (state, {error}) => {
+        const newState = {...state, error};
+        localStorage.setItem('authState', JSON.stringify(newState))
+        return newState;
+    }),
 
 )
 

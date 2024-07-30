@@ -1,0 +1,15 @@
+/*  controll button */
+.control-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .control-button:hover {
+    background-color: #0056b3;
+  }

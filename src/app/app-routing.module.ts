@@ -6,15 +6,23 @@ import { ProjectDetailComponent } from './project/project-detail/project-detail.
 import { ProfileComponent } from './user/profile/profile.component';
 import { RegisterComponent } from './user/register/register.component';
 import { LoginComponent } from './user/login/login.component';
+import { authGuard } from './core/guards/auth.guard';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { NewProjectComponent } from './project/new-project/new-project.component';
+import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'projects', component: DashboardComponent },
-  { path: 'projects/:id', component: ProjectDetailComponent},
-  { path: 'profile', component: ProfileComponent},
+  { path: 'projects/new', pathMatch: 'full', component: NewProjectComponent },
+  { path: 'projects/:id', pathMatch: 'full', component: ProjectDetailComponent},
+  { path: 'projects/edit/:id', pathMatch: 'full', component: ProjectEditComponent},
+  { path: 'profile', canActivate: [authGuard], component: ProfileComponent},
+  { path: 'projects/**', pathMatch: 'full', component: NotFoundComponent},
   { path: 'register', component: RegisterComponent},
-  { path: 'login', component: LoginComponent}
+  { path: 'login', component: LoginComponent},
+  { path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({
@@ -22,3 +30,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+

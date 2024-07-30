@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -17,27 +17,35 @@ import { OwnerEffects } from './+store/owner/effects';
 import { UserModule } from './user/user.module';
 import { AuthService } from './core/auth.service';
 import { ProjectService } from './project/project.service';
+import { SharedModule } from './shared/shared.module';
+import { AuthEffects } from './+store/auth/effects';
+import { NewProjectComponent } from './project/new-project/new-project.component';
+import { ConfirmDelDialogComponent } from './core/account-del-dialog/confirm-del-dialog.component';
+import { ProjectModule } from './project/project.module';
+import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     DashboardComponent,
-    ProjectDetailComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([OwnerEffects]),
+    EffectsModule.forRoot([OwnerEffects, AuthEffects]),
     AppRoutingModule,
     CoreModule,
-    UserModule
+    UserModule,
+    SharedModule,
+    ProjectModule,
   ],
   providers: [
     provideClientHydration(),
     AuthService,
-    ProjectService
+    ProjectService,
+    provideHttpClient(withFetch())
 
   ],
   bootstrap: [AppComponent]

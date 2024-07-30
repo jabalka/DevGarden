@@ -1,0 +1,9 @@
+ to change password after verify existing password!, delete account.,
+Set Guard to dont let users enter /profile if not signed
+User to be able to create new Projects.,
+User to browse their own projects
+
+
+
+
+create my-projects component

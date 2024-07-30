@@ -1,11 +1,14 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
-import { UserEffects } from '../+store/auth/effects';
-import { EffectsModule } from '@ngrx/effects';
 import { UserService } from './user.service';
+import { Store, StoreModule } from '@ngrx/store';
+import { reducers } from '../+store/user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
+import { loadAuthState } from '../+store/load-auth-state';
 
 @NgModule({
   declarations: [
@@ -14,11 +17,26 @@ import { UserService } from './user.service';
     ProfileComponent,
   ],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
     CommonModule,
-    EffectsModule.forRoot([UserEffects]),
+    StoreModule.forFeature('user', reducers),
+
+    SharedModule
   ],
   providers: [
-    UserService
+    UserService,
+        {
+      provide: APP_INITIALIZER,
+       useFactory: loadAuthState,
+       deps: [Store],
+       multi: true
+    }
+  ],
+  exports: [
+    LoginComponent,
+    RegisterComponent,
+    ProfileComponent,
   ]
 })
 export class UserModule { }

@@ -5,20 +5,25 @@ import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './auth.service';
+import { authGuard } from './guards/auth.guard';
+import { ConfirmDelDialogComponent } from './account-del-dialog/confirm-del-dialog.component';
 
 
 
 @NgModule({
   declarations: [
+    ConfirmDelDialogComponent,
     HeaderComponent,
   ],
   imports: [
     CommonModule,
     HttpClientModule,
     RouterModule, 
+
   ],
   providers: [
-    AuthService
+    AuthService,
+
   ],
   exports: [
     HeaderComponent,

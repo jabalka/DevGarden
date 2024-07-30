@@ -13,6 +13,6 @@ export interface UserResponse {
 export interface UserModel extends IUser {
     username: string,
     name: string,
-    phone: number,
+    phone: string,
 }
 

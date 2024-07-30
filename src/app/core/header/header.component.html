@@ -3,9 +3,9 @@
 
     <div class="mini-navbar-wrap">
       <div class="logo-wrap">
-        <h1><a href="/">Developers Garden</a></h1>
+        <h1><a routerLink="/">Developers Garden</a></h1>
       </div>
-      <div class="mini-navbar">
+      <div *ngIf="(isReady$ | async)" class="mini-navbar">
         <ul *ngIf="!(isLogged$ | async)">
           <li>
             <a routerLink="/login">Login</a>
@@ -14,9 +14,9 @@
             <a routerLink="/register">Register</a>
           </li>
         </ul>
-        <ul *ngIf="isLogged$ | async">
+        <ul *ngIf="(isLogged$ | async)">
           <li>
-            <a routerLink="/profile">John's profile</a>
+            <a routerLink="/profile">{{ getUsername(currentUser$ | async) }}</a>
           </li>
           <li>
             <a (click)="logoutHandler()">Logout</a>
@@ -25,10 +25,15 @@
       </div>
     </div>
     <nav>
-      <ul>
+      <ul *ngIf="!(isLogged$ | async)">
         <li>
             <a routerLink="/projects">Projects</a>
         </li>
+      </ul>
+      <ul *ngIf="(isLogged$ | async)">
+        <li>
+          <a routerLink="/projects">Projects</a>
+      </li>
         <li>
             <a routerLink="/my-projects">My Projects</a>
         </li>

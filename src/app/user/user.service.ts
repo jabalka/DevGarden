@@ -4,7 +4,8 @@ import { environment } from '../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { loadOwner } from '../+store/owner/actions';
-import { updateUser } from '../+store/auth/actions';
+import { authenticate, clearUserData, logout, updateUser } from '../+store/auth/actions';
+import { ObjectId } from 'mongodb';
 
 const apiUrl = environment.apiUrl + 'user/';
 
@@ -31,9 +32,17 @@ export class UserService {
   //   );
   // }
 
-  updateProfile(userId: string, data:any): Observable<any>{
+  updateProfile(data:any): Observable<any>{
     return this.http.put<any>(apiUrl + 'profile', data, {withCredentials: true}).pipe(
       tap((user: any) => this.store.dispatch(updateUser({user})))
+    );
+  }
+
+  deleteUser(userId: ObjectId): Observable<any> {
+    return this.http.delete<any>(apiUrl + 'profile/' + userId, {withCredentials: true}).pipe(
+      tap(() => {
+        this.store.dispatch(clearUserData());
+      })
     );
   }
   

@@ -46,7 +46,6 @@ export class DashboardComponent implements OnInit  {
       }
     );
   }
-
   // deleteProject(projectId: string): void {
   //   this.projectService.deleteProject(projectId).subscribe(
   //     () => {
@@ -60,12 +59,9 @@ export class DashboardComponent implements OnInit  {
   //   )
   // }
 
-
-
   navigateToDetail(projectId: string): void {
     this.router.navigate(['/projects/', projectId])
   }
-
   // navigateToEditProject(projectId: string) : void {
   //   this.router.navigate(['/projects/', projectId]);
   // }

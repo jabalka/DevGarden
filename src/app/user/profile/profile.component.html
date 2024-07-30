@@ -1,1 +1,117 @@
-<p>profile works!</p>
+<div class="profile">
+    <!-- <img src="/assets/profile.png" alt="default user"> -->
+    <h3>User Info:</h3>
+    <div *ngIf="(inEditMode$ | async) else defaultModeDebug">
+
+    <div *ngIf="!inAdvancedSettings; else advancedSettingsMode">
+      <!-- Debug Output for Edit Mode -->
+      <p>Edit Mode: {{ (inEditMode$ | async) }}</p>
+      <ng-container *ngTemplateOutlet="editMode"></ng-container>
+    </div>
+
+    </div>
+
+    <ng-template #defaultModeDebug>
+      <!-- Debug Output for Default Mode -->
+      <p>Edit Mode: {{ (inEditMode$ | async) }}</p>
+      <ng-container *ngTemplateOutlet="defaultMode"></ng-container>
+    </ng-template>
+
+  </div>
+  
+  <ng-template #defaultMode>
+    <div class="flex">
+      <p>Username: </p>
+      <p>{{ currentUser.username }}</p>
+    </div>
+    <div class="flex">
+      <p>Name: </p>
+      <p>{{ currentUser.name }}</p>
+    </div>
+    <div class="flex">
+      <p>Phone: </p>
+      <p>+359 {{ currentUser.phone }}</p>
+    </div>
+    <!-- Use a function to toggle edit mode instead of passing true/false -->
+    <button class="control-button" (click)="toggleEditMode()">Edit</button>
+  </ng-template>
+  
+  <ng-template #editMode>
+    <button type="button" class="control-button" (click)="toggleAdvancedSettings()">Advanced Settings</button>
+    <form [formGroup]="form" class="profile" (ngSubmit)="submitHandler()">
+      <div class="flex">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" formControlName="username"/>
+      </div>
+      <div class="flex">
+        <label for="name">Name:</label>
+        <input type="name" name="name" id="name" formControlName="name"/>
+      </div>
+      <div class="flex">
+        <label for="phone">Phone:</label>
+          <select name="select-tel" id="select-tel" class="phone">
+            <option value="00359">+359 (BG)</option>
+            <option value="0044">+44 (GB)</option>
+          </select>
+          <input type="text" name="phone" id="phone" value="tel. number:" formControlName="phone">
+      </div>
+      <!-- Use a function to toggle edit mode instead of passing true/false -->
+      <div class="control-buttons">
+        <button type="button" class="control-button" (click)="toggleEditMode()">Cancel</button>
+        <button [disabled]="isLoading$ | async" class="control-button">Save</button>
+      </div>
+      <app-loader [isLoading]="isLoading$ | async"></app-loader>
+    </form>
+  </ng-template>
+
+  <ng-template #advancedSettingsMode>
+    <div class="advanced-settings">
+      <div class="control-buttons">
+        <button [hidden]="isPassChecked" type="button" class="control-button" (click)="backBtn()">&lsaquo; BACK</button>
+        <button *ngIf="!inAdvancedChange" type="button" class="control-button" (click)="toggleChangePass()">Change Password</button>
+        <button *ngIf="!inAdvancedChange" type="button" class="control-button" (click)="deleteAccountHandler()">Delete Account</button>
+      </div>
+      <ng-container *ngIf="inAdvancedChange">
+        <div *ngIf="!isPassChecked">
+          <form [formGroup]="formPassCheck" class="profile" (ngSubmit)="submitPassChecker()">
+            <p class="field field-icon">
+              <label for="password"><span><i class="fas fa-lock"></i></span></label>
+              <input [class.input-error]="formPassCheck.get('password')?.touched && !!formPassCheck.get('password')?.errors" type="password" name="password" id="password" placeholder="Please enter your password..." formControlName="password">
+            </p>
+            <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+            <p *ngIf="formPassCheck.get('password')?.touched && formPassCheck.get('password')?.errors?.['required']" class="error">Password is required!</p>
+            <button type="button" class="control-button" (click)="toggleAdvancedSettings()">Cancel</button>
+            <button [disabled]="isLoading$ | async" class="control-button">Continue &rsaquo;</button>
+            <app-loader [isLoading]="isLoading$ | async"></app-loader>
+          </form>
+        </div>
+        <div *ngIf="this.inDeleteAccount && this.isPassChecked">
+          <!-- Empty field whenever the openConfirmDialog() is opened! -->
+        </div>
+        <div *ngIf="inPassChange && isPassChecked">
+          <form [formGroup]="formPass" class="profile" (ngSubmit)="submitPassChange()">
+            <p class="field field-icon">
+              <label for="password"><span><i class="fas fa-lock"></i></span></label>
+              <input [class.input-error]="formPass.get('password')?.touched && !!formPass.get('password')?.errors" type="password" name="password" id="password" placeholder="Please enter your password..." formControlName="password">
+            </p>
+            <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['required']" class="error">Password is required!</p>
+            <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['minLength']" class="error">{{ formPass.get('password')?.errors?.['minLength'] }}</p>
+            <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['hasNumber']" class="error">{{ formPass.get('password')?.errors?.['hasNumber'] }}</p>
+            <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['hasSpecialChar']" class="error">{{ formPass.get('password')?.errors?.['hasSpecialChar'] }}</p>
+            <p class="field field-icon">
+              <label for="rePassword"><span><i class="fas fa-lock"></i></span></label>
+              <input [class.input-error]="formPass.get('rePassword')?.touched && !!formPass.get('rePassword')?.errors" type="password" name="rePassword" id="rePassword" placeholder="Please repeat your password..." formControlName="rePassword">
+            </p>
+            <p *ngIf="formPass.get('rePassword')?.touched && formPass.get('rePassword')?.errors?.['required']" class="error">Repeat password is required!</p>
+            <p *ngIf="formPass.get('rePassword')?.touched && formPass.get('rePassword')?.errors?.['areTheSame']" class="error">{{ formPass.get('rePassword')?.errors?.['areTheSame'] }}</p>
+            <div class="control-buttons">
+              <button type="button" class="control-button" (click)="toggleAdvancedSettings()">Cancel</button>
+              <button [disabled]="isLoading$ | async" class="control-button">Save</button>
+            </div>
+            <app-loader [isLoading]="isLoading$ | async"></app-loader>
+          </form>
+        </div>
+      </ng-container>
+    </div>
+</ng-template>
+
