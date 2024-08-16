@@ -1,5 +1,10 @@
   /* errors  */
-  
+  fieldset {
+    border-radius: 0.3em;
+    padding: 0.8em;
+    background-color: #ffffff;
+  }
+
   p.error {
     text-align: left;
     border-radius: 0.3em;

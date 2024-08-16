@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from
 import { IUser, UserModel } from '../user/user.model';
 import { authenticate, login, logout, register } from '../+store/auth/actions';
 import { authReducer } from '../+store/auth/reducers';
+import { NavigationService } from './navigation.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -24,7 +25,8 @@ export class AuthService implements OnInit{
 
   constructor(
     private http: HttpClient,
-    private store: Store<IAuthUserState>
+    private store: Store<IAuthUserState>,
+    private navigationService: NavigationService,
   ) { 
     this.currentUser$.pipe(
       switchMap((user: IUser | UserModel | null) => {
@@ -39,11 +41,12 @@ export class AuthService implements OnInit{
               username: user.email.split('@')[0],
               name: '',
               phone: '',
+              profilePicture: ''
           };
           this.currentUser = updatedUser;
           }
         }
-        this.currentUserSubject.next(null);
+        this.currentUserSubject.next(this.currentUser);
         return of(user);
       })
     ).subscribe();
@@ -78,7 +81,7 @@ export class AuthService implements OnInit{
     return this.http.get(apiUrl + 'user/logout', {withCredentials: true}).pipe(
       tap(() => {
         this.store.dispatch(logout());
-
+        this.navigationService.clearHistory();
       })
     );
   }

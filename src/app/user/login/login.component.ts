@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { IUserModuleState } from '../../+store/user';
 import { userLoginSetErrorMessage, userLoginSetLoading } from '../../+store/user/actions';
-import { login, register } from '../../+store/auth/actions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { emailValidator, passwordValidator } from '../../shared/interfaces/validators';
 import { UserService } from '../user.service';
@@ -17,11 +16,11 @@ import { UserService } from '../user.service';
 })
 export class LoginComponent implements OnInit{
   form:FormGroup;
+  isPasswordVisible: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private userService: UserService,
     private router: Router,
     private store: Store<IUserModuleState>
   ){
@@ -60,5 +59,9 @@ export class LoginComponent implements OnInit{
         }
       }
     )
+  }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible =!this.isPasswordVisible;
   }
 }

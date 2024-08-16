@@ -5,7 +5,7 @@ import { ProjectService } from '../project.service';
 import { IUser, UserModel } from '../../user/user.model';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription, first, of, switchMap } from 'rxjs';
-import { loadOwner } from '../../+store/owner/actions';
+import { loadOwner, loadOwnerSuccess } from '../../+store/owner/actions';
 import { IAppState } from '../../+store';
 import { selectProjectOwner } from '../../+store/owner/selectors';
 import { selectCurrentUser } from '../../+store/selectors';
@@ -13,6 +13,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { projectSetEditMode, projectSetErrorMessage, projectSetLoading } from '../../+store/project/actions';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectDelDialogComponent } from '../../core/project-del-dialog copy/project-del-dialog.component';
+import { UserService } from '../../user/user.service';
+// import { ObjectId } from 'mongodb';
+import { ObjectId } from 'bson';
+import { NavigationService } from '../../core/navigation.service';
 
 @Component({
   selector: 'app-project-detail',
@@ -38,10 +42,12 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService,
+    private navigationService: NavigationService,
     private router: Router,
     private store: Store<IAppState>,
     private fb: FormBuilder,
     private dialog: MatDialog,
+    private userService: UserService,
   ){
 
     this.inEditMode$ = this.store.select(state => state.project.isEditMode);
@@ -67,8 +73,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
             this.project = response.project;
             this.ownerTotalProjects = response.projects;
             this.totalProjects = response.totalProjects;
-            this.getOwner();
             this.updateFormWithProject();
+            this.getOwner();
             return this.currentUser$ || of(null);
           })
         ).subscribe(user => {
@@ -102,24 +108,27 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
     getOwner() {
       const ownerId = this.project.owner.toString();
       this.store.dispatch(loadOwner({ userId: ownerId }));
-      this.projectOwnerSubscription = this.store.pipe(select(selectProjectOwner))
-        .subscribe(
-          (owner: UserModel | null) => {
-            if (owner) {
-              Object.assign(this.projectOwner, owner);
-              // get just the first part of the email to use as greeting------
-              this.projectOwner.username = owner.email.split('@')[0];
+      this.userService.getUser(ownerId).subscribe(
+        (owner) => {
+          if(owner){
+            this.store.dispatch(loadOwnerSuccess({ owner: owner}));
+            Object.assign(this.projectOwner, owner);
+            if(!owner.username){
+              this.projectOwner.username = owner.email.split('@')[0].slice(0,1).toUpperCase() + owner.email.split('@')[0].slice(1);
             }
-          },
-          error => console.error('Error fetching owner:', error)
-        );
+          }
+        },
+        (error) => {
+            console.error('Error fetching owner:', error)}
+      );
     }
   
     deleteProject(): void {
         this.projectService.deleteProject((this.project._id).toString()).subscribe(
           () => {
             this.totalProjects--;
-            this.router.navigate(['/projects']);
+            const previousUrl = this.navigationService.getPreviousUrl();
+            this.router.navigate([previousUrl]);
           },
           error => {
             console.error('Error deleting project:', error);
@@ -134,7 +143,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
     }
   
     goBack() {
-      this.router.navigate(['/projects']);
+      const previousUrl = this.navigationService.getPreviousUrl();
+      this.router.navigate([previousUrl]);
     }
 
     updateHandler(): void {
@@ -147,8 +157,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
           this.loadProjectAndVerifyOwner();
         },
         error: (err) => {
-          this.errorMessage = err.error.message;
-          this.store.dispatch(projectSetErrorMessage({ message: err.error.message }));
+          this.errorMessage = err.error.message || 'An error occurred while updating the project.';
+          this.store.dispatch(projectSetErrorMessage({ message: this.errorMessage }));
           this.store.dispatch(projectSetLoading({ isLoading: false }));
         }
       })
@@ -178,5 +188,10 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
           this.isHiddenWindow = false;
         }
       })
+    }
+
+    openPublisherAccount(): void {
+      const publisherId = this.projectOwner._id;
+      this.router.navigate(['/publisher', publisherId]);
     }
 }

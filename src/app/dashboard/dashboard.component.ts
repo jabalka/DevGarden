@@ -3,6 +3,7 @@ import { Project, ProjectResponse } from '../project/project.model';
 import { Router } from '@angular/router';
 import { ProjectService } from '../project/project.service';
 import { UserService } from '../user/user.service';
+import { NavigationService } from '../core/navigation.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,15 +19,15 @@ export class DashboardComponent implements OnInit  {
 
   constructor(
     private projectService: ProjectService,
-    private userService: UserService,
-    @Inject(Router) private router: Router,
+    private router: Router,
+    private navigationService: NavigationService,
   ){
     this.projects = [];
 
   }
 
   ngOnInit(): void {
-    this.currentPage = 1;
+    this.currentPage = this.navigationService.getCurrentPage() || 1;
     this.getProjects(this.currentPage);
   }
 
@@ -40,32 +41,18 @@ export class DashboardComponent implements OnInit  {
         this.projects = response.projects;
         this.totalProjects = response.totalProjects;
         this.currentPage = page;
+        this.navigationService.setCurrentPage(page); // this may need to be deleted to refresh the page everytime enter again here
       },
       error => {
         console.error('Error fetching projects:', error);
       }
     );
   }
-  // deleteProject(projectId: string): void {
-  //   this.projectService.deleteProject(projectId).subscribe(
-  //     () => {
-  //       this.projects = this.projects.filter(project => project._id.toString()!== projectId);
-  //       this.totalProjects--;
-  //       console.log('Project deleted successfully');
-  //     },
-  //     error => {
-  //       console.error('Error deleting project:', error);
-  //     }
-  //   )
-  // }
 
   navigateToDetail(projectId: string): void {
     this.router.navigate(['/projects/', projectId])
   }
-  // navigateToEditProject(projectId: string) : void {
-  //   this.router.navigate(['/projects/', projectId]);
-  // }
-  
+
   goToNextPage(): void {
     if (this.currentPage * this.pageSize < this.totalProjects){
       this.getProjects(this.currentPage + 1);

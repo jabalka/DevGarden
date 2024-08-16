@@ -21,6 +21,7 @@ export class ProjectService {
     if(user){
       const parsedUser = JSON.parse(user)
       const token = parsedUser.accessToken;
+      // headers = headers.set('Content-Type', 'application/json');
       headers = headers.set('x-authorization', token);
     }
     return headers;
@@ -31,9 +32,19 @@ export class ProjectService {
     return this.http.get<ProjectResponse>(url);
   }
 
+  getOwnerProjects(ownerId: string, page: number, pageSize: number): Observable<ProjectResponse> {
+    const url = `${apiUrl}?_ownerId=${ownerId}&page=${page}&pageSize=${pageSize}`;
+    return this.http.get<ProjectResponse>(url, {headers: this.createHeaders(), withCredentials: true});
+  }
+
+  getProjectsByOwner(ownerId: string): Observable<any> {
+    return this.http.get<any>(apiUrl + 'projects/' + ownerId , {headers: this.createHeaders(), withCredentials: true})
+  }
+
   getProjectById(id: string): Observable<ProjectResponse> {
     return this.http.get<ProjectResponse>(apiUrl + id);
   }
+
 
   createProject(project: Project): Observable<Project> {
     const headers = this.createHeaders();
@@ -42,6 +53,10 @@ export class ProjectService {
 
   updateProject(projectId: string, project: Project): Observable<Project> {
     return this.http.put<Project>(apiUrl + projectId, project, {headers: this.createHeaders(), withCredentials: true});
+  }
+
+  updateToAdminOwnership(projectId: string, project: Project): Observable<Project> {
+    return this.http.put<Project>(apiUrl + 'adminOwned/' + projectId, project, {headers: this.createHeaders(), withCredentials: true});
   }
 
   deleteProject(id: string): Observable<void> {

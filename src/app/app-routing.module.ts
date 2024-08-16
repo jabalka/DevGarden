@@ -10,11 +10,13 @@ import { authGuard } from './core/guards/auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NewProjectComponent } from './project/new-project/new-project.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
+import { MyProjectsComponent } from './project/my-projects/my-projects.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'projects', component: DashboardComponent },
+  { path: 'my-projects', component: MyProjectsComponent},
   { path: 'projects/new', pathMatch: 'full', component: NewProjectComponent },
   { path: 'projects/:id', pathMatch: 'full', component: ProjectDetailComponent},
   { path: 'projects/edit/:id', pathMatch: 'full', component: ProjectEditComponent},

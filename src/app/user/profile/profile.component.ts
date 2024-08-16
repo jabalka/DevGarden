@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
-import { Observable, first, of, switchMap } from 'rxjs';
+import { UserService, apiUrl } from '../user.service';
+import { Observable, catchError, first, forkJoin, of, switchMap } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { Store, select } from '@ngrx/store';
 import { IUserModuleState } from '../../+store/user';
@@ -14,6 +14,10 @@ import { passwordValidator, rePasswordValidatorFactory } from '../../shared/inte
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDelDialogComponent } from '../../core/account-del-dialog/confirm-del-dialog.component';
+import { ProjectService } from '../../project/project.service';
+import { ObjectId } from 'bson';
+import { Project } from '../../project/project.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -25,6 +29,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   form: FormGroup;
   formPass: FormGroup;
   formPassCheck: FormGroup;
+  selectedFile: File | null = null;
+  profilePictureUrl: string | null = null;
 
   inEditMode$: Observable<boolean>;
   isLoading$ = this.store.select(state => state.user.profile.isLoading);
@@ -37,12 +43,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   inDeleteAccount: boolean = false;
   inPassChange: boolean = false;
   errorMessage: string = '';
+  isPasswordVisible: boolean = false;
+  isRePasswordVisible: boolean = false;
 
   constructor(
     private dialog: MatDialog,
     private fb: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
+    private projectService: ProjectService,
     private store: Store<IUserModuleState>,
     private router: Router,
   ){
@@ -65,14 +74,38 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
 
   }
+
+  onFileSelected(event: any){
+    this.selectedFile = event.target.files[0];
+  }
+
+  uploadProfilePicture(){
+    if (!this.selectedFile) return;
+
+    this.userService.uploadProfilePicture(this.selectedFile).subscribe({
+      next: (response) => {
+        this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${response.profilePicture}`
+      },
+      error: (err) => {
+        console.error('Error uploading profile picture', err);
+      }
+    })
+  }
 // this.currentUser$ returns only the email and password, not the username, name etc.
 
   ngOnInit(): void {
+    this.store.select(state => state.auth.currentUser).subscribe(user => {
+      // Check if profilePicture is included
+    });
     this.currentUser$.pipe(
       switchMap((user: IUser | UserModel | null) => {
         if (user){
           if('username' in user){
             this.currentUser = {...user} as UserModel;
+            // Set profilePictureUrl if user.profilePicture is available
+            if (this.currentUser.profilePicture) {
+              this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${this.currentUser.profilePicture}`;
+            }
           } else {
             const updatedUser: UserModel = {
               _id: user._id,
@@ -81,6 +114,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               username: user.email.split('@')[0],
               name: '',
               phone: '',
+              profilePicture: ''
           };
           this.currentUser = updatedUser;
           }
@@ -126,6 +160,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.inAdvancedSettings = !this.inAdvancedSettings;
     this.isPassChecked = false;
     this.inAdvancedChange = false;
+    this.isPasswordVisible = false;
+    this.isRePasswordVisible = false;
     this.formPass.get('password')?.reset();
     this.formPassCheck.get('password')?.reset();
     this.formPass.get('password')?.markAsUntouched();
@@ -137,6 +173,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.inAdvancedChange = !this.inAdvancedChange;
     this.inPassChange = true;
     this.isPassChecked = false;
+    this.isPasswordVisible = false;
+    this.isRePasswordVisible = false;
     this.formPass.get('password')?.markAsUntouched();
     this.formPassCheck.get('password')?.markAsUntouched();
   }
@@ -146,10 +184,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.formPassCheck.get('password')?.markAsUntouched();
       this.formPassCheck.get('password')?.reset();
       this.isPassChecked = false;
+      this.isPasswordVisible = false;
+      this.isRePasswordVisible = false;
     } else if (this.inAdvancedChange){
       this.formPass.get('password')?.markAsUntouched();
       this.formPass.get('password')?.reset();
       this.inAdvancedChange = false;
+      this.isPasswordVisible = false;
+      this.isRePasswordVisible = false;
     } else if (this.inAdvancedSettings){
       this.inAdvancedSettings = false;
     }
@@ -163,6 +205,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   togglePassChange(): void {
     this.isPassChecked = !this.isPassChecked;
+    this.isPasswordVisible = false;
+    this.isRePasswordVisible = false;
   }
 
   submitPassChecker(): void{
@@ -186,6 +230,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     } else {
       this.formPassCheck.markAllAsTouched();
     }
+    this.isPasswordVisible = false;
+    this.isRePasswordVisible = false;
   }
 
   submitPassChange(): void {
@@ -199,6 +245,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         username: this.currentUser.username,
         name: this.currentUser.name,
         phone: this.currentUser.phone,
+        profilePicture: this.currentUser.profilePicture
       }
       this.store.dispatch(userProfileSetLoading({ isLoading: true }));
       this.userService.updateProfile(this.currentUser).subscribe({
@@ -218,6 +265,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.formPass.get('password')?.reset();
     this.formPass.get('rePassword')?.reset();
     this.inPassChange = false;
+    this.isPasswordVisible = false;
+    this.isRePasswordVisible = false;
   }
 
   submitHandler(): void {
@@ -269,18 +318,57 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   deleteAccount(): void {
     const id = this.currentUser._id;
-    this.userService.deleteUser(id).subscribe({
-      next: () => {
-        this.store.dispatch(userProfileSetLoading({isLoading: false}));
-        this.router.navigate(['/register']);
-      },
-      error: (err) => {
-        this.store.dispatch(userProfileSetErrorMessage({ message: err.error.message }));
-        this.store.dispatch(userProfileSetLoading({isLoading: false}));
-      }
-    })
-    // console.log('profile.component ln243:', localStorage.getItem('authState'));
-    // this.authService.logout().subscribe(() => this.router.navigate(['/']));
+    const adminId = '66a913c2df66e5fd8b3e78cc';
 
-  }
+    // all projects owned by the user
+    this.projectService.getProjectsByOwner(id.toString()).pipe(
+        switchMap((projectsData: { projects: Project[], totalProjects: number }) => {
+            const projects = projectsData.projects;
+
+            // check if there are projects to update
+            if (projects.length > 0) {
+                // If there are projects, update their ownership
+                const projectUpdates = projects.map(project => {
+                    project.owner = new ObjectId(adminId);
+                    return this.projectService.updateToAdminOwnership(project._id.toString(), project).pipe(
+                        catchError(error => {
+                            console.error('Error updating project:', error);
+                            return of(null); // Continue even if an error occurs
+                        })
+                    );
+                });
+                // wait for all projects to adopt Admin ownership completion
+                return forkJoin(projectUpdates).pipe(
+                    switchMap(() => this.userService.deleteUser(id.toString())) // then delete the user
+                );
+            } else {
+                // if there are no projects, directly delete the user
+                return this.userService.deleteUser(id.toString());
+            }
+        }),
+        catchError(err => {
+            console.error('Error deleting user:', err);
+            this.store.dispatch(userProfileSetErrorMessage({ message: err.error.message }));
+            this.store.dispatch(userProfileSetLoading({ isLoading: false }));
+            return of(null); // continue the stream
+        })
+    ).subscribe({
+        next: () => {
+            this.store.dispatch(userProfileSetLoading({ isLoading: false }));
+            this.router.navigate(['/register']);
+        },
+        error: (err) => {
+            console.error('An error occurred:', err);
+            this.store.dispatch(userProfileSetLoading({ isLoading: false }));
+        }
+      });
+    }
+
+    togglePasswordVisibility(): void {
+      this.isPasswordVisible =!this.isPasswordVisible;
+    }
+  
+    toggleRePasswordVisibility(): void {
+      this.isRePasswordVisible =!this.isRePasswordVisible;
+    }
 }

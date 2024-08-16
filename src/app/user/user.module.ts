@@ -9,6 +9,7 @@ import { reducers } from '../+store/user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { loadAuthState } from '../+store/load-auth-state';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { loadAuthState } from '../+store/load-auth-state';
     CommonModule,
     StoreModule.forFeature('user', reducers),
 
-    SharedModule
+    SharedModule,
+    RouterModule,
   ],
   providers: [
     UserService,

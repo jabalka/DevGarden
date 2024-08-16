@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Observable, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { loadOwner } from '../+store/owner/actions';
-import { authenticate, clearUserData, logout, updateUser } from '../+store/auth/actions';
-import { ObjectId } from 'mongodb';
+import { authenticate, clearUserData, logout, updatePic, updateUser } from '../+store/auth/actions';
+import { ObjectId } from 'bson';
 
-const apiUrl = environment.apiUrl + 'user/';
+export const apiUrl = environment.apiUrl + 'user/';
 
 
 @Injectable({
@@ -20,9 +20,20 @@ export class UserService {
     private store: Store,
   ) { }
 
+  private createHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const user = localStorage.getItem('currentUser');
+    if(user){
+      const parsedUser = JSON.parse(user)
+      const token = parsedUser.accessToken;
+      headers = headers.set('x-authorization', token);
+    }
+    return headers;
+  }
+
   getUser(userId: string){
     //     return this.http.get<ProjectResponse>(url);
-    return this.http.get<any>(apiUrl + userId, {withCredentials: true})
+    return this.http.get<any>(apiUrl + userId, { withCredentials: true});
   }
   // this.store.dispatch(loadOwner({userId})))
   
@@ -33,13 +44,21 @@ export class UserService {
   // }
 
   updateProfile(data:any): Observable<any>{
-    return this.http.put<any>(apiUrl + 'profile', data, {withCredentials: true}).pipe(
+    return this.http.put<any>(apiUrl + 'profile', data, {headers: this.createHeaders(), withCredentials: true}).pipe(
       tap((user: any) => this.store.dispatch(updateUser({user})))
     );
   }
 
-  deleteUser(userId: ObjectId): Observable<any> {
-    return this.http.delete<any>(apiUrl + 'profile/' + userId, {withCredentials: true}).pipe(
+  uploadProfilePicture(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('profilePicture', file);
+    return this.http.put<any>(apiUrl + 'profile-picture', formData, {headers: this.createHeaders(), withCredentials: true}).pipe(
+      tap((user: any) => this.store.dispatch(updatePic({user})))
+    );
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete<any>(apiUrl + 'profile/' + userId, {headers: this.createHeaders(), withCredentials: true}).pipe(
       tap(() => {
         this.store.dispatch(clearUserData());
       })

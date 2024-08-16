@@ -1,11 +1,12 @@
+<fieldset>
 <div class="profile">
     <!-- <img src="/assets/profile.png" alt="default user"> -->
-    <h3>User Info:</h3>
+    <h3>Profile</h3>
     <div *ngIf="(inEditMode$ | async) else defaultModeDebug">
 
     <div *ngIf="!inAdvancedSettings; else advancedSettingsMode">
       <!-- Debug Output for Edit Mode -->
-      <p>Edit Mode: {{ (inEditMode$ | async) }}</p>
+      <!-- <p>Edit Mode: {{ (inEditMode$ | async) }}</p> -->
       <ng-container *ngTemplateOutlet="editMode"></ng-container>
     </div>
 
@@ -13,47 +14,66 @@
 
     <ng-template #defaultModeDebug>
       <!-- Debug Output for Default Mode -->
-      <p>Edit Mode: {{ (inEditMode$ | async) }}</p>
+      <!-- <p>Edit Mode: {{ (inEditMode$ | async) }}</p> -->
       <ng-container *ngTemplateOutlet="defaultMode"></ng-container>
     </ng-template>
 
   </div>
   
-  <ng-template #defaultMode>
+  <ng-template #defaultMode >
+    <div class="defaultMode">
+      <div class="profile-picture-container">
+        <img *ngIf="profilePictureUrl; else defaultImage" [src]="profilePictureUrl" class="profile-picture" alt="Profile Picture">
+        <ng-template #defaultImage>
+          <img class="profile-picture" src="assets/default-picture.png" alt="Default Profile Picture">
+        </ng-template>
+      </div>
     <div class="flex">
-      <p>Username: </p>
-      <p>{{ currentUser.username }}</p>
+      <p class="label">Username: </p>
+      <p class="value">{{ currentUser.username }}</p>
     </div>
     <div class="flex">
-      <p>Name: </p>
-      <p>{{ currentUser.name }}</p>
+      <p class="label">Name: </p>
+      <p class="value">{{ currentUser.name }}</p>
     </div>
     <div class="flex">
-      <p>Phone: </p>
-      <p>+359 {{ currentUser.phone }}</p>
+      <p class="label">Phone: </p>
+      <p class="value">+359 {{ currentUser.phone }}</p>
     </div>
     <!-- Use a function to toggle edit mode instead of passing true/false -->
+    <div class="control-buttons">
     <button class="control-button" (click)="toggleEditMode()">Edit</button>
+    </div>
+    </div>
+
   </ng-template>
   
   <ng-template #editMode>
+    <div class="control-buttons">
     <button type="button" class="control-button" (click)="toggleAdvancedSettings()">Advanced Settings</button>
-    <form [formGroup]="form" class="profile" (ngSubmit)="submitHandler()">
-      <div class="flex">
-        <label for="username">Username:</label>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submitHandler()">
+      <div class="editMode">
+              <div class="flex">
+        <label class="label" for="username">Username:</label>
         <input type="text" name="username" id="username" formControlName="username"/>
       </div>
       <div class="flex">
-        <label for="name">Name:</label>
+        <label class="label" for="name">Name:</label>
         <input type="name" name="name" id="name" formControlName="name"/>
       </div>
       <div class="flex">
-        <label for="phone">Phone:</label>
+        <label class="label" for="phone">Phone:</label>
           <select name="select-tel" id="select-tel" class="phone">
             <option value="00359">+359 (BG)</option>
             <option value="0044">+44 (GB)</option>
           </select>
           <input type="text" name="phone" id="phone" value="tel. number:" formControlName="phone">
+      </div>
+      <div class="profile-picture-container">
+        <input type="file" (change)="onFileSelected($event)" />
+        <button (click)="uploadProfilePicture()">Upload</button>
+        <img *ngIf="profilePictureUrl" [src]="profilePictureUrl"  class="profile-picture" alt="Profile Picture" />
       </div>
       <!-- Use a function to toggle edit mode instead of passing true/false -->
       <div class="control-buttons">
@@ -61,27 +81,37 @@
         <button [disabled]="isLoading$ | async" class="control-button">Save</button>
       </div>
       <app-loader [isLoading]="isLoading$ | async"></app-loader>
+      </div>
+
     </form>
   </ng-template>
 
   <ng-template #advancedSettingsMode>
     <div class="advanced-settings">
+
       <div class="control-buttons">
         <button [hidden]="isPassChecked" type="button" class="control-button" (click)="backBtn()">&lsaquo; BACK</button>
         <button *ngIf="!inAdvancedChange" type="button" class="control-button" (click)="toggleChangePass()">Change Password</button>
         <button *ngIf="!inAdvancedChange" type="button" class="control-button" (click)="deleteAccountHandler()">Delete Account</button>
       </div>
+      <div class="flex">
       <ng-container *ngIf="inAdvancedChange">
         <div *ngIf="!isPassChecked">
-          <form [formGroup]="formPassCheck" class="profile" (ngSubmit)="submitPassChecker()">
-            <p class="field field-icon">
-              <label for="password"><span><i class="fas fa-lock"></i></span></label>
-              <input [class.input-error]="formPassCheck.get('password')?.touched && !!formPassCheck.get('password')?.errors" type="password" name="password" id="password" placeholder="Please enter your password..." formControlName="password">
-            </p>
+          <form [formGroup]="formPassCheck" (ngSubmit)="submitPassChecker()">
+            <div class="fieldLabels">
+              <label class="label" for="password"><span>Please enter your existing password:</span></label>
+              <input [class.input-error]="formPassCheck.get('password')?.touched && !!formPassCheck.get('password')?.errors" [type]="isPasswordVisible ? 'text' : 'password'" name="password" id="password" placeholder="Enter your password..." formControlName="password">
+              <button type="button" (click)="togglePasswordVisibility()" class="show-hide-button">
+                {{ isPasswordVisible ? 'Hide' : 'Show'}}
+            </button>
+
             <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
             <p *ngIf="formPassCheck.get('password')?.touched && formPassCheck.get('password')?.errors?.['required']" class="error">Password is required!</p>
+            <div class="control-buttons">
             <button type="button" class="control-button" (click)="toggleAdvancedSettings()">Cancel</button>
             <button [disabled]="isLoading$ | async" class="control-button">Continue &rsaquo;</button>
+            </div>
+          </div>
             <app-loader [isLoading]="isLoading$ | async"></app-loader>
           </form>
         </div>
@@ -89,29 +119,41 @@
           <!-- Empty field whenever the openConfirmDialog() is opened! -->
         </div>
         <div *ngIf="inPassChange && isPassChecked">
-          <form [formGroup]="formPass" class="profile" (ngSubmit)="submitPassChange()">
-            <p class="field field-icon">
-              <label for="password"><span><i class="fas fa-lock"></i></span></label>
-              <input [class.input-error]="formPass.get('password')?.touched && !!formPass.get('password')?.errors" type="password" name="password" id="password" placeholder="Please enter your password..." formControlName="password">
-            </p>
+          <div class="flex">
+          <form [formGroup]="formPass" (ngSubmit)="submitPassChange()">
+            <div class="fieldLabels">
+              <label class="label" for="password"><span>Please enter your new password:</span></label>
+              <input [class.input-error]="formPass.get('password')?.touched && !!formPass.get('password')?.errors" [type]="isPasswordVisible ? 'text' : 'password'" name="password" id="password" placeholder="Enter your password..." formControlName="password">
+              <button type="button" (click)="togglePasswordVisibility()" class="show-hide-button">
+                {{ isPasswordVisible ? 'Hide' : 'Show'}}
+            </button>
+
             <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['required']" class="error">Password is required!</p>
             <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['minLength']" class="error">{{ formPass.get('password')?.errors?.['minLength'] }}</p>
             <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['hasNumber']" class="error">{{ formPass.get('password')?.errors?.['hasNumber'] }}</p>
             <p *ngIf="formPass.get('password')?.touched && formPass.get('password')?.errors?.['hasSpecialChar']" class="error">{{ formPass.get('password')?.errors?.['hasSpecialChar'] }}</p>
-            <p class="field field-icon">
-              <label for="rePassword"><span><i class="fas fa-lock"></i></span></label>
-              <input [class.input-error]="formPass.get('rePassword')?.touched && !!formPass.get('rePassword')?.errors" type="password" name="rePassword" id="rePassword" placeholder="Please repeat your password..." formControlName="rePassword">
-            </p>
+          </div>
+          <div class="fieldLabels">
+              <label class="label" for="rePassword"><span>Re-enter your NEW password</span></label>
+              <input [class.input-error]="formPass.get('rePassword')?.touched && !!formPass.get('rePassword')?.errors" [type]="isRePasswordVisible ? 'text' : 'password'" name="rePassword" id="rePassword" placeholder="Repeat your password..." formControlName="rePassword">
+              <button type="button" (click)="toggleRePasswordVisibility()" class="show-hide-button">
+                {{ isRePasswordVisible ? 'Hide' : 'Show'}}
+            </button>
             <p *ngIf="formPass.get('rePassword')?.touched && formPass.get('rePassword')?.errors?.['required']" class="error">Repeat password is required!</p>
-            <p *ngIf="formPass.get('rePassword')?.touched && formPass.get('rePassword')?.errors?.['areTheSame']" class="error">{{ formPass.get('rePassword')?.errors?.['areTheSame'] }}</p>
+            <p *ngIf="formPass.get('rePassword')?.touched && formPass.get('rePassword')?.errors?.['areTheSame'] && !formPass.get('rePassword')?.errors?.['required']" class="error">{{ formPass.get('rePassword')?.errors?.['areTheSame'] }}</p>
+          </div>
             <div class="control-buttons">
               <button type="button" class="control-button" (click)="toggleAdvancedSettings()">Cancel</button>
               <button [disabled]="isLoading$ | async" class="control-button">Save</button>
             </div>
+
             <app-loader [isLoading]="isLoading$ | async"></app-loader>
           </form>
+          </div>
+
         </div>
       </ng-container>
+      </div>
     </div>
 </ng-template>
-
+</fieldset>

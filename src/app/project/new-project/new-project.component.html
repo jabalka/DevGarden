@@ -1,44 +1,54 @@
-<div class="container">
-    <div class="new-theme-border">
-        <div class="header-background">
-            <span>New Project</span>
+<fieldset>
+    <div class="container">
+        <div class="new-theme-border">
+            <div class="header-background">
+                <h3>New Project</h3>
+            </div>
+    
+                <form [formGroup]="form" class="project-create" (ngSubmit)="submitHandler()">
+                    <div class="flex">
+                        <div class="fieldLabels">
+                        <label class="label" for="title">Title:</label>
+                        <input [class.input-error]="form.get('title')?.touched && !!form.get('title')?.errors" type="text" name="title" id="title" formControlName="title"/>
+                        <p *ngIf="form.get('title')?.touched && form.get('title')?.errors?.['required']" class="error">Title is required!</p>
+                        <p *ngIf="form.get('title')?.touched && (form.get('title')?.errors?.['minlength'] || form.get('title')?.errors?.['maxlength'])" class="error">Title must be between 5-25 chracter!</p>
+                    </div>
+                    <div class="fieldLabels">
+                        <label class="label" for="description">Description:</label>
+                        <input [class.input-error]="form.get('description')?.touched && !!form.get('description')?.errors" type="text" name="description" id="description" formControlName="description"/>
+                        <p *ngIf="form.get('description')?.touched && form.get('description')?.errors?.['required']" class="error">Description is required!</p>
+                        <p *ngIf="form.get('description')?.touched && (form.get('description')?.errors?.['minlength'] || form.get('description')?.errors?.['maxlength'])" class="error">Description must be not less than 10 and no more 250 characters!</p>
+                    </div>
+                    <div class="fieldLabels">
+                        <label class="label" for="language">Language: </label>
+                        <select [class.input-error]="form.get('language')?.touched && !!form.get('language')?.errors" formControlName="language">
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="Python">Python</option>
+                            <option value="C#">C#</option>
+                            <option value="Java">Java</option>
+                        </select>
+                        <p *ngIf="form.get('language')?.touched && form.get('language')?.errors?.['required']" class="error">Language is required!</p>
+                    </div>
+                    <div class="fieldLabels">
+                        <label class="label" for="code">Code:</label>
+                        <textarea [class.input-error]="form.get('code')?.touched && !!form.get('code')?.errors" type="text" name="code" id="code" rows="8" class="height" minlength="10" formControlName="code"></textarea>
+                        <p *ngIf="form.get('code')?.touched && form.get('code')?.errors?.['required']" class="error">Code is required!</p>
+                        <p *ngIf="form.get('code')?.touched && (form.get('code')?.errors?.['minlength'] || form.get('code')?.errors?.['maxlength'])" class="error">Code must be not less than 10 and no more 2 500 characters!</p>
+                    </div>
+                    </div>
+
+                    <div class="control-buttons">
+                    <button type="button" class="control-button" (click)="cancelCreate()">Cancel</button>
+                    <button class="control-button" type="submit">Create</button>
+                    </div>
+                        <!-- [innerHTML] used to present the <br> tags as HTML from the errorMessage  -->
+                    <p *ngIf="errorMessage" class="error" [innerHTML]="errorMessage"></p>
+                </form>
+
+    
         </div>
-
-            <form [formGroup]="form" class="project-create" (ngSubmit)="submitHandler()">
-                <div class="flex">
-                    <label for="title">Title:</label>
-                    <input [class.input-error]="form.get('title')?.touched && !!form.get('title')?.errors" type="text" name="title" id="title" formControlName="title"/>
-                    <p *ngIf="form.get('title')?.touched && form.get('title')?.errors?.['required']" class="error">Title is required!</p>
-                    <p *ngIf="form.get('title')?.touched && (form.get('title')?.errors?.['minlength'] || form.get('title')?.errors?.['maxlength'])" class="error">Title must be between 5-25 chracter!</p>
-                </div>
-                <div class="flex">
-                    <label for="description">Description:</label>
-                    <input [class.input-error]="form.get('description')?.touched && !!form.get('description')?.errors" type="text" name="description" id="description" formControlName="description"/>
-                    <p *ngIf="form.get('description')?.touched && form.get('description')?.errors?.['required']" class="error">Description is required!</p>
-                    <p *ngIf="form.get('description')?.touched && (form.get('description')?.errors?.['minlength'] || form.get('description')?.errors?.['maxlength'])" class="error">Description must be not less than 10 and no more 250 characters!</p>
-                </div>
-                <div class="flex">
-                    <label for="language">Language: </label>
-                    <select [class.input-error]="form.get('language')?.touched && !!form.get('language')?.errors" formControlName="language">
-                        <option value="JavaScript">JavaScript</option>
-                        <option value="Python">Python</option>
-                        <option value="C#">C#</option>
-                        <option value="Java">Java</option>
-                    </select>
-                    <p *ngIf="form.get('language')?.touched && form.get('language')?.errors?.['required']" class="error">Language is required!</p>
-                </div>
-                <div class="flex">
-                    <label for="code">Code:</label>
-                    <textarea [class.input-error]="form.get('code')?.touched && !!form.get('code')?.errors" type="text" name="code" id="code" rows="8" class="height" minlength="10" formControlName="code"></textarea>
-                    <p *ngIf="form.get('code')?.touched && form.get('code')?.errors?.['required']" class="error">Code is required!</p>
-                    <p *ngIf="form.get('code')?.touched && (form.get('code')?.errors?.['minlength'] || form.get('code')?.errors?.['maxlength'])" class="error">Code must be not less than 10 and no more 2 500 characters!</p>
-                </div>
-                <button type="button" class="control-button" (click)="cancelCreate()">Cancel</button>
-                <button class="control-button" type="submit">Create</button>
-            </form>
-
     </div>
-</div>
+</fieldset>
 
         <!-- <form #f="ngForm" (ngSubmit)="submitHandler(f.value)">
             <div class="new-project-title">

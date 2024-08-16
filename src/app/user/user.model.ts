@@ -14,5 +14,6 @@ export interface UserModel extends IUser {
     username: string,
     name: string,
     phone: string,
+    profilePicture: string
 }
 

@@ -1,6 +1,4 @@
-<header>
-
-
+<!-- <header>
     <div class="mini-navbar-wrap">
       <div class="logo-wrap">
         <h1><a routerLink="/">Developers Garden</a></h1>
@@ -8,15 +6,15 @@
       <div *ngIf="(isReady$ | async)" class="mini-navbar">
         <ul *ngIf="!(isLogged$ | async)">
           <li>
-            <a routerLink="/login">Login</a>
+            <a (click)="redirect2Login()">Login</a>
           </li>
           <li>
-            <a routerLink="/register">Register</a>
+            <a (click)="redirect2Register()">Register</a>
           </li>
         </ul>
         <ul *ngIf="(isLogged$ | async)">
           <li>
-            <a routerLink="/profile">{{ getUsername(currentUser$ | async) }}</a>
+            <a (click)="redirect2Profile()">{{ getUsername(currentUser$ | async) }}</a>
           </li>
           <li>
             <a (click)="logoutHandler()">Logout</a>
@@ -27,19 +25,64 @@
     <nav>
       <ul *ngIf="!(isLogged$ | async)">
         <li>
-            <a routerLink="/projects">Projects</a>
+            <a (click)="redirect2Projects()">Projects</a>
         </li>
       </ul>
       <ul *ngIf="(isLogged$ | async)">
         <li>
-          <a routerLink="/projects">Projects</a>
+          <a (click)="redirect2Projects()">Projects</a>
       </li>
         <li>
-            <a routerLink="/my-projects">My Projects</a>
+            <a (click)="redirect2MyProjects()">My Projects</a>
         </li>
         <li>
-          <a routerLink="/projects/new">New Project</a>
+          <a (click)="redirect2NewProject()">New Project</a>
         </li>
       </ul>
     </nav>
-  </header>
+  </header> -->
+
+
+  <header>
+    <div class="mini-navbar-wrap">
+        <div class="logo-wrap">
+            <h1><a routerLink="/">Developers Garden</a></h1>
+        </div>
+        <div *ngIf="(isReady$ | async)" class="mini-navbar">
+            <ul *ngIf="!(isLogged$ | async)">
+                <li (click)="redirect2Login()">
+                    <a>Login</a>
+                </li>
+                <li (click)="redirect2Register()">
+                    <a>Register</a>
+                </li>
+            </ul>
+            <ul *ngIf="(isLogged$ | async)">
+                <li (click)="redirect2Profile()">
+                    <a>{{ getUsername(currentUser$ | async) }}</a>
+                </li>
+                <li (click)="logoutHandler()">
+                    <a>Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <nav>
+        <ul *ngIf="!(isLogged$ | async)">
+            <li (click)="redirect2Projects()">
+                <a>Projects</a>
+            </li>
+        </ul>
+        <ul *ngIf="(isLogged$ | async)">
+            <li (click)="redirect2Projects()">
+                <a>Projects</a>
+            </li>
+            <li (click)="redirect2MyProjects()">
+                <a>My Projects</a>
+            </li>
+            <li (click)="redirect2NewProject()">
+                <a>New Project</a>
+            </li>
+        </ul>
+    </nav>
+</header>

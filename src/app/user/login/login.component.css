@@ -1,5 +1,35 @@
 /*login register forms  */
 
+/* ---- errors ---- */
+p.error {
+  text-align: left;
+  border-radius: 0.3em;
+  color: red;
+  padding-top: 0;
+}
+
+.input-error {
+  border-left-color: red;
+}
+/* ----END---- */
+
+.field {
+  position: relative;
+}
+
+.show-hide-button {
+  position: absolute;
+  right: 10px; /* Position the button on the right */
+  top: 50%; /* Center the button vertically */
+  transform: translateY(-1%); /* Adjust position for better alignment */
+  border: none; /* Remove border */
+  background: transparent; /* Make background transparent */
+  cursor: pointer; /* Change cursor to pointer */
+  font-size: 14px; /* Set font size */
+  color: rgba(0, 0, 0, 0.581); /* Change text color to black */
+}
+
+
 form.login, form.register {
     width: 40%;
     margin: 2em auto 0;
@@ -37,19 +67,31 @@ form.login, form.register {
     border-bottom-right-radius: 0.3em;
   }
   
-  
   .login select, .register select {
     border-color: black;
   }
   
-  .login button, .register button {
-    color: white;
+  .login-button {
+    color: rgb(255, 255, 255);
+    font-weight: bolder;
     border: none;
     border-radius: 0.3em;
     padding: 0.6em 1.2em;
     margin-top: 1.5rem;
     width: 60%;
     outline: none;
+    background-color: rgba(85, 84, 84, 0.167); /* background color when disabled */
+  }
+
+  /* cursor for enabled state */
+  .login-button:not(:disabled) {
+    cursor: pointer; 
+    background-color: rgba(85, 84, 84, 0.604);
+    transition: background-color 0.1s cubic-bezier(1,-0.59,.58,1);
+  }
+
+  .login-button:not(:disabled):hover{
+    background-color: rgba(85, 84, 84, 0.93);
   }
   
   .login i, .register i {
@@ -78,15 +120,4 @@ form.login, form.register {
     padding-bottom: 0;
   }
   
-  /* errors  */
   
-  p.error {
-    text-align: left;
-    border-radius: 0.3em;
-    color: red;
-    padding-top: 0;
-  }
-  
-  .input-error {
-    border-left-color: red;
-  }

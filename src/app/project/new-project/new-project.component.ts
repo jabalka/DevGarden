@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/auth.service';
 import { of, switchMap } from 'rxjs';
-import { IUser, UserModel } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 
 @Component({
   selector: 'app-new-project',
@@ -17,6 +17,7 @@ export class NewProjectComponent implements OnInit {
 
   currentUser$ = this.authService.currentUser$;
   currentUser: UserModel = {} as UserModel;
+  errorMessage: string = ''
 
 
   constructor(
@@ -51,7 +52,8 @@ export class NewProjectComponent implements OnInit {
         this.router.navigate(['/my-projects']);
       },
       error: (err) => {
-
+        this.errorMessage = err.error.message.replace(/\n/g, '<br>');
+        console.error('Problem with creating a new project', err)
       }
     })
   }

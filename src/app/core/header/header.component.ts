@@ -7,6 +7,7 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../+store';
 import { selectCurrentUser } from '../../+store/selectors';
 import { setUser } from '../../+store/auth/actions';
+import { NavigationService } from '../navigation.service';
 
 @Component({
   selector: 'app-header',
@@ -28,6 +29,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   
   constructor(
     private authService: AuthService,
+    private navigationService: NavigationService,
     private router: Router,
     private store: Store<IAppState>
     ){
@@ -38,31 +40,14 @@ export class HeaderComponent implements OnDestroy, OnInit {
       // });
   }
 
-  // loginHandler(): void{
-  //   this.userService.login('loginStr');
-  // }
 
   logoutHandler(): void{
     this.authService.logout().subscribe(() => this.router.navigate(['/']));
-    
   }
 
   ngOnInit(): void {
-  //   this.currentUserSubscription = this.store.pipe(select(selectCurrentUser))
-  //   .subscribe((user: IUser | UserModel | null) => {
-  //     if(user){
-  //       Object.assign(this.currentUser, user)
-  //                // get just the first part of the email to use as greeting------
-  //         this.currentUser.username = user.email.split('@')[0];
-  //     }
-  // },
-  // error => console.error('Error fetching owner:', error));
   }
   ngOnDestroy(): void {
-
-    // in this case this is not needed because this is a main component
-    // so it will be destroyed when the application is removed (when we leave the app)
-    // // but it's gopod practice to always unsubscribe to subscriptions
     this.subscription?.unsubscribe();
   }
 
@@ -71,5 +56,35 @@ export class HeaderComponent implements OnDestroy, OnInit {
       return user.username;
     }
     return user!.email.split('@')[0];;
+  }
+
+  redirect2Login(){
+    this.navigationService.clearCurrentPage();
+    this.router.navigate(['/login']);
+  }
+
+  redirect2Register(){
+    this.navigationService.clearCurrentPage();
+    this.router.navigate(['/register']);
+  }
+
+  redirect2Profile(){
+    this.navigationService.clearCurrentPage();
+    this.router.navigate(['/profile']);
+  }
+
+  redirect2Projects(){
+    this.navigationService.clearCurrentPage();
+    this.router.navigate(['/projects']);
+  }
+
+  redirect2MyProjects(){
+    this.navigationService.clearCurrentPage();
+    this.router.navigate(['/my-projects']);
+  }
+
+  redirect2NewProject(){
+    this.navigationService.clearCurrentPage();
+    this.router.navigate(['/projects/new']);
   }
 }

@@ -32,6 +32,19 @@ export function passwordValidator(control: AbstractControl): ValidationErrors | 
 export function rePasswordValidatorFactory(targetControl: AbstractControl): ValidatorFn {
     return function rePasswordValidator(control: AbstractControl): ValidationErrors | null {
         const areTheSame = targetControl.value === control.value;
-        return areTheSame ? null : { areTheSame: 'Passwords do not match!' };
+        const errors: ValidationErrors = {};
+
+        if(!areTheSame){
+            errors['areTheSame'] = 'Passwords do not match!';
+        }
+        
+        return Object.keys(errors).length > 0 ? errors : null;
     }
 }
+// Shortened version of the above factory function but less readable
+// export function rePasswordValidatorFactory(targetControl: AbstractControl): ValidatorFn {
+//     return function rePasswordValidator(control: AbstractControl): ValidationErrors | null {
+//         const areTheSame = targetControl.value === control.value;
+//         return areTheSame ? null : { areTheSame: 'Passwords do not match!' };
+//     }
+// }

@@ -3,7 +3,7 @@ header {
     background: linear-gradient(0deg, rgba(0, 128, 182, 1) 0%, rgba(0, 128, 182, 1) 35%, rgba(0, 212, 255, 1) 100%);
 }
 
-header ul {
+ul {
     padding: 0;
     display: flex;
     align-items: center;
@@ -11,7 +11,7 @@ header ul {
     margin: auto;
 }
 
-header ul span {
+ul span {
     color: white;
     padding: 0.5em;
 }
@@ -23,16 +23,30 @@ header ul span {
     width: 100%;
 }
 
-header li {
-    list-style: none;
-    margin: .35em;
-    padding: 0 .95em;
+li {
+    cursor: pointer;
+    color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.452);
 }
 
-header a {
+li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 10px; /* Adjust padding as needed */
+    text-decoration: none;
+}
+
+li:hover{
+    background-color: #f0f0f0a5; /* Highlight background on hover */
+    transition: 0.3s ease;
+}
+
+a {
     text-decoration: none;
     color: white;
     cursor: pointer;
+    font-weight: bold;
 }
 
 nav {

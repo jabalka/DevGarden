@@ -19,16 +19,14 @@ import { AuthService } from './core/auth.service';
 import { ProjectService } from './project/project.service';
 import { SharedModule } from './shared/shared.module';
 import { AuthEffects } from './+store/auth/effects';
-import { NewProjectComponent } from './project/new-project/new-project.component';
-import { ConfirmDelDialogComponent } from './core/account-del-dialog/confirm-del-dialog.component';
 import { ProjectModule } from './project/project.module';
-import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     DashboardComponent,
+
   ],
   imports: [
     BrowserModule,

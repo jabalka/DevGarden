@@ -15,9 +15,11 @@ import { register } from '../../+store/auth/actions';
 })
 export class RegisterComponent {
   form: FormGroup;
-
+  isPasswordVisible: boolean = false;
+  isRePasswordVisible: boolean = false;
   isLoading$ = this.store.select(state => state.user.register.isLoading);
   errorMessage$ = this.store.select(state => state.user.register.errorMessage);
+  errorMessage = ''
 
   constructor(
     private fb: FormBuilder,
@@ -49,8 +51,17 @@ export class RegisterComponent {
       error: (err) => {
         this.store.dispatch(userRegisterSetLoading({ isLoading: false}));
         this.store.dispatch(userRegisterSetErrorMessage({ message: err.error.message}));
+        this.errorMessage = err.error.message; // show error message on form
       }
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible =!this.isPasswordVisible;
+  }
+
+  toggleRePasswordVisibility(): void {
+    this.isRePasswordVisible =!this.isRePasswordVisible;
   }
 
 }
