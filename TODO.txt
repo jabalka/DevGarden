@@ -1,0 +1,13 @@
+
+
+*in project-detail.component., ln192:
+    -create new component for Profile detail
+    - set the route in app-routing.,
+
+
+
+
+
+
+Set Guard to dont let users enter /profile if not signed
+
