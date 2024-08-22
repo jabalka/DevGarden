@@ -8,6 +8,8 @@ import { IAppState } from '../../+store';
 import { selectCurrentUser } from '../../+store/selectors';
 import { setUser } from '../../+store/auth/actions';
 import { NavigationService } from '../navigation.service';
+import { environment } from '../../environments/environment';
+import { UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-header',
@@ -22,33 +24,38 @@ export class HeaderComponent implements OnDestroy, OnInit {
   isLogged$ = this.authService.isLogged$;
   isReady$ = this.authService.isReady$;
   currentUser$ = this.authService.currentUser$;
+  profilePictureUrl: string | null = null;
 
   // currentUser: UserModel = {} as UserModel;
   currentUser = this.authService.currentUser;
   currentUserSubscription?: Subscription;
+  profilePicChangeSubscription?: Subscription;
   
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private navigationService: NavigationService,
     private router: Router,
     private store: Store<IAppState>
     ){
-    // this.authService.isLogged$.subscribe(value => this.isLogged$ = value);
-      // this.isLogged$.subscribe(isLogged => {
-      // });
-      // this.isReady$.subscribe(isReady => {
-      // });
-  }
 
-
-  logoutHandler(): void{
-    this.authService.logout().subscribe(() => this.router.navigate(['/']));
   }
 
   ngOnInit(): void {
+    if (this.currentUser.profilePicture) {
+      this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${this.currentUser.profilePicture}`;
+    }
+
+    // subscribe to profile pic changes
+    this.profilePicChangeSubscription = this.userService.profilePicChange$.subscribe(newProfilePicUrl => {
+      if(newProfilePicUrl){
+        this.profilePictureUrl = newProfilePicUrl;
+      }
+    })
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.profilePicChangeSubscription?.unsubscribe();
   }
 
   getUsername(user: UserModel | null): string {
@@ -56,6 +63,10 @@ export class HeaderComponent implements OnDestroy, OnInit {
       return user.username;
     }
     return user!.email.split('@')[0];;
+  }
+
+  logoutHandler(): void{
+    this.authService.logout().subscribe(() => this.router.navigate(['/']));
   }
 
   redirect2Login(){

@@ -39,6 +39,7 @@ export class AuthService implements OnInit{
               email: user.email,
               hashedPassword: user.hashedPassword,
               username: user.email.split('@')[0],
+              accessToken: this.currentUser.accessToken,
               name: '',
               phone: '',
               profilePicture: ''

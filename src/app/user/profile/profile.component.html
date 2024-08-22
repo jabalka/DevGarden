@@ -54,6 +54,14 @@
     </div>
     <form [formGroup]="form" (ngSubmit)="submitHandler()">
       <div class="editMode">
+        <div class="profile-picture-container">
+          <img *ngIf="profilePictureUrl; else defaultImage" [src]="profilePictureUrl"  class="profile-picture" alt="Profile Picture" (click)="fileInput.click()" style="cursor: pointer;"/>
+          <ng-template #defaultImage>
+            <img src="assets/default-picture.png" class="profile-picture" alt="Profile Picture" (click)="fileInput.click()" style="cursor: pointer;"/>
+          </ng-template>
+          <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none;" />
+          <button (click)="submitHandler()" style="display: none;">Upload</button>
+        </div>
               <div class="flex">
         <label class="label" for="username">Username:</label>
         <input type="text" name="username" id="username" formControlName="username"/>
@@ -70,11 +78,7 @@
           </select>
           <input type="text" name="phone" id="phone" value="tel. number:" formControlName="phone">
       </div>
-      <div class="profile-picture-container">
-        <input type="file" (change)="onFileSelected($event)" />
-        <button (click)="uploadProfilePicture()">Upload</button>
-        <img *ngIf="profilePictureUrl" [src]="profilePictureUrl"  class="profile-picture" alt="Profile Picture" />
-      </div>
+
       <!-- Use a function to toggle edit mode instead of passing true/false -->
       <div class="control-buttons">
         <button type="button" class="control-button" (click)="toggleEditMode()">Cancel</button>

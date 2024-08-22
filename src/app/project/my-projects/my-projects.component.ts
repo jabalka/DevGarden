@@ -40,6 +40,7 @@ export class MyProjectsComponent implements OnInit {
 
   getUserProjects(page: number): void {
     this.projectService.getOwnerProjects((this.currentUser._id).toString(), page, this.pageSize).subscribe(
+      
       (response) => {
         this.projects = response.projects;
         this.totalProjects = response.totalProjects;

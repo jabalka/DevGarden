@@ -6,14 +6,11 @@ export interface IUser {
     hashedPassword: string,
 }
 
-export interface UserResponse {
-    
-}
-
 export interface UserModel extends IUser {
     username: string,
     name: string,
     phone: string,
-    profilePicture: string
+    profilePicture: string,
+    accessToken: string,
 }
 

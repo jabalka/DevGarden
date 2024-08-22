@@ -1,14 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService, apiUrl } from '../user.service';
-import { Observable, catchError, first, forkJoin, of, switchMap } from 'rxjs';
+import { Observable, Subscription, catchError, first, forkJoin, of, switchMap } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { Store, select } from '@ngrx/store';
 import { IUserModuleState } from '../../+store/user';
 import { userProfileSetEditMode, userProfileSetErrorMessage, userProfileSetLoading } from '../../+store/user/actions';
-import { clearUserData, logout, updateUser } from '../../+store/auth/actions';
 import { IUser, UserModel } from '../user.model';
-import { selectCurrentUser } from '../../+store/selectors';
-import { UserModule } from '../user.module';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { passwordValidator, rePasswordValidatorFactory } from '../../shared/interfaces/validators';
 import { Router } from '@angular/router';
@@ -45,6 +42,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   errorMessage: string = '';
   isPasswordVisible: boolean = false;
   isRePasswordVisible: boolean = false;
+  profilePicChangeSubscription?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -79,44 +78,41 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.selectedFile = event.target.files[0];
   }
 
-  uploadProfilePicture(){
-    if (!this.selectedFile) return;
+  // uploadProfilePicture(){
+  //   if (!this.selectedFile) return;
 
-    this.userService.uploadProfilePicture(this.selectedFile).subscribe({
-      next: (response) => {
-        this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${response.profilePicture}`
-      },
-      error: (err) => {
-        console.error('Error uploading profile picture', err);
-      }
-    })
-  }
+  //   this.userService.updateProfile(this.selectedFile).subscribe({
+  //     next: (response) => {
+  //       this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${response.profilePicture}`
+  //     },
+  //     error: (err) => {
+  //       console.error('Error uploading profile picture', err);
+  //     }
+  //   })
+  // }
 // this.currentUser$ returns only the email and password, not the username, name etc.
 
   ngOnInit(): void {
-    this.store.select(state => state.auth.currentUser).subscribe(user => {
-      // Check if profilePicture is included
-    });
-    this.currentUser$.pipe(
-      switchMap((user: IUser | UserModel | null) => {
-        if (user){
-          if('username' in user){
+    const storeSubscription = this.store.select(state => state.auth.currentUser).pipe(
+      switchMap((user: UserModel | IUser | null) => {
+        if(user){
+          if('username' in user) {
             this.currentUser = {...user} as UserModel;
-            // Set profilePictureUrl if user.profilePicture is available
-            if (this.currentUser.profilePicture) {
-              this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${this.currentUser.profilePicture}`;
-            }
           } else {
-            const updatedUser: UserModel = {
+            this.currentUser = {
               _id: user._id,
               email: user.email,
               hashedPassword: user.hashedPassword,
               username: user.email.split('@')[0],
               name: '',
               phone: '',
-              profilePicture: ''
-          };
-          this.currentUser = updatedUser;
+              profilePicture: this.currentUser.profilePicture,
+              accessToken: this.currentUser.accessToken
+            };
+          }
+          
+          if(this.currentUser.profilePicture){
+            this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${this.currentUser.profilePicture}`;
           }
           this.form.patchValue({
             username: this.currentUser.username,
@@ -124,30 +120,29 @@ export class ProfileComponent implements OnInit, OnDestroy {
             phone: this.currentUser.phone
           });
 
-          if(this.currentUser._id){
+          if (this.currentUser._id) {
             this.userId = this.currentUser._id.toString();
           }
         }
         return of(user);
       })
     ).subscribe();
-    // this.currentUser$.subscribe((user: IUser | UserModel | null) => {
-    //   console.log('profile.component ln36:', user)
-    //   if(user){
-    //     Object.assign(this.currentUser, user);
-    //     if(this.currentUser.username === '')
-    //     this.currentUser.username = user.email.split('@')[0];
-    //   if(this.currentUser._id){
-    //     // this.userId = this.currentUser._id.toString();
-    //     // console.log('profile.component ln39:',this.userId)
-    //   }
-    //   }
-    // })
-  //  this.isEditMode$ = this.store.select(state => state.user.profile.isEditMode);
+
+    this.subscriptions.push(storeSubscription);
+ 
+    this.profilePicChangeSubscription = this.userService.profilePicChange$.subscribe(newProfilePicUrl => {
+      if(newProfilePicUrl){
+        this.profilePictureUrl = newProfilePicUrl;
+      }
+    })
+
+    this.subscriptions.push(this.profilePicChangeSubscription);
   }
+  
   ngOnDestroy():void {
     this.store.dispatch(userProfileSetEditMode({isEdit: false}));
     this.inAdvancedSettings = false;
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   toggleEditMode(): void {
@@ -236,19 +231,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   submitPassChange(): void {
     const data = this.formPass.value;
+    data.email = this.currentUser.email;
     if(data.password){
       this.toggleAdvancedSettings();
-      this.currentUser = {
-        _id: this.currentUser._id,
-        email: this.currentUser.email,
-        hashedPassword: data.password,
-        username: this.currentUser.username,
-        name: this.currentUser.name,
-        phone: this.currentUser.phone,
-        profilePicture: this.currentUser.profilePicture
-      }
       this.store.dispatch(userProfileSetLoading({ isLoading: true }));
-      this.userService.updateProfile(this.currentUser).subscribe({
+      this.userService.updateProfile(data, this.selectedFile).subscribe({
         next: () => {
           this.store.dispatch(userProfileSetEditMode({ isEdit: false }));;
           this.store.dispatch(userProfileSetLoading({isLoading: false}));
@@ -285,20 +272,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
       name: data.name,
       phone: data.phone,
     }
-
-    this.store.dispatch(userProfileSetLoading({ isLoading: true }));
-    this.userService.updateProfile(this.currentUser).subscribe({
-      next: () => {
-        this.store.dispatch(userProfileSetEditMode({ isEdit: false }));;
-        this.store.dispatch(userProfileSetLoading({isLoading: false}));
-        // by doing this it will save only the data passed to the "updateUser()"
-        // this.store.dispatch(updateUser({ user: this.currentUser }));
-      },
-      error: (err) => {
-        this.store.dispatch(userProfileSetErrorMessage({ message: err.error.message }));
-        this.store.dispatch(userProfileSetLoading({isLoading: false}));
-      }
-    })
+    if(this.selectedFile){
+      this.userService.updateProfile(this.currentUser,this.selectedFile).subscribe({
+        next: (response) => {
+          this.store.dispatch(userProfileSetEditMode({ isEdit: false }));;
+          this.store.dispatch(userProfileSetLoading({isLoading: false}));
+          this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${response.profilePicture}`
+        },
+        error: (err) => {
+          this.store.dispatch(userProfileSetErrorMessage({ message: err.error.message }));
+          this.store.dispatch(userProfileSetLoading({isLoading: false}));
+          console.error('Error uploading profile picture', err);
+        }
+      })
+    } else {
+        this.store.dispatch(userProfileSetLoading({ isLoading: true }));
+        this.userService.updateProfile(this.currentUser, this.selectedFile).subscribe({
+          next: () => {
+            this.store.dispatch(userProfileSetEditMode({ isEdit: false }));;
+            this.store.dispatch(userProfileSetLoading({isLoading: false}));
+            // by doing this it will save only the data passed to the "updateUser()"
+            // this.store.dispatch(updateUser({ user: this.currentUser }));
+          },
+          error: (err) => {
+            this.store.dispatch(userProfileSetErrorMessage({ message: err.error.message }));
+            this.store.dispatch(userProfileSetLoading({isLoading: false}));
+          }
+        })
+    }
   }
 
   openConfirmDialog(): void {

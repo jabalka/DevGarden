@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "sourceMap": true,
+            "sourceMap": false,
             "outputPath": "dist/jab-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -64,7 +64,7 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": false
             }
           },
           "defaultConfiguration": "production"
