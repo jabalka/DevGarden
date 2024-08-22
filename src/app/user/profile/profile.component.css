@@ -1,0 +1,292 @@
+
+.profile-picture-container{
+  text-align: center;
+}
+
+.profile-picture{
+  max-width: 250px;
+  border: solid 5px #11183d5c;
+  border-radius: 5px;
+}
+
+
+/* END DIV Control Buttons */
+/* fieldLabels */
+.fieldLabels{
+  padding-left: 20%;
+  padding-right: 20%;
+  padding-bottom: 5%;
+}
+/* END fieldLabels */
+
+h3{
+  text-align: center;
+}
+
+/* Show-Hide Password Button */
+.show-hide-button {
+  position: absolute;
+  /* right: 36%;                    Position the button on the right */
+  transform: translateY(10%) translateX(-110%);    /* Adjust position for better alignment */
+  border: none;                  /* Remove border */
+  background: transparent;       /* Make background transparent */
+  cursor: pointer;               /* Change cursor to pointer */
+  font-size: 14px;               /* Set font size */
+  color: rgba(0, 0, 0, 0.581); /* Change text color to black */
+}
+
+/* END --- Show-Hide Password Button */
+
+form.formPass, form.formPassCheck, form.form {
+  width: 40%;
+  margin: 2em auto 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* Stack inputs vertically */
+  align-items: center; /* Center inputs horizontally */
+}
+  
+  fieldset {
+    border-radius: 0.3em;
+    padding: 0.8em;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center inputs inside the fieldset */
+    width: 97%;
+  }
+
+  .profile{
+    border-radius: 1em;
+    background-color: #57c8ff;
+    width: 60%;
+    background: linear-gradient( 0deg, rgb(225, 244, 252) 0%, rgb(119, 198, 230) 35%, rgb(246, 253, 255) 100%);
+
+  }
+
+  /* Styling for the label <p> tags */
+   .editMode .label,  .advanced-settings .label{
+    font-weight: bold;
+    color: #007bff; /* Change this to your preferred color */
+    text-shadow: 1px 1px 2px rgb(216, 216, 216); /* Adds a subtle shadow effect */
+    margin-right: 5px; /* Adds some spacing between label and value */
+  }
+
+/* DefaultMode elements */
+    .defaultMode .flex {
+    display: block;
+    align-content: center;
+    padding-left: 27.5%;
+    padding-right: 27.5%;
+
+    }
+
+    .defaultMode .flex+.flex{
+      border-top: solid 1px black;
+      border-bottom: solid 1px black;
+    }
+
+    .defaultMode .label {
+      font-weight: bold;
+      text-align: center;
+      color: #007bff; /* Change this to your preferred color */
+      padding-bottom: 0;
+      text-shadow: 1px 1px 2px rgb(216, 216, 216); /* Adds a subtle shadow effect */
+      margin-right: 5px; /* Adds some spacing between label and value */
+      height: 10px;
+    }
+
+    .defaultMode .value{
+      font-weight: bold;
+      color: black; /* Ensures the text color is black */
+      text-align: center;
+      height: 10px;
+    }
+
+    .defaultMode .control-buttons{
+      text-align: center;
+      padding-bottom: 2%;
+      padding-top: 2%;
+    }
+
+    .defaultMode .control-button{
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      background-color: #007bff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      font-weight: bold;
+      width: 20%;
+      letter-spacing: 2px;
+    }
+
+    .defaultMode .control-button:hover{
+        background-color: #0056b3;
+    }
+  /*END-  DefaultMode elements */
+
+/* EditMode elements */
+  .editMode .flex{
+    display: inline-block;
+    align-items: center;
+    padding-left: 27.5%;
+    padding-right: 27.5%;
+    margin-bottom: 10px; /* Add some spacing between the rows */
+  }
+
+  .editMode .value{
+    font-weight: bold;
+  color: black; /* Ensures the text color is black */
+  margin-left: 5px; /* Adds some spacing between label and value */
+  }
+
+  .editMode .label{
+    font-weight: bold;
+    color: #007bff; /* Change this to your preferred color */
+    text-shadow: 1px 1px 2px rgb(216, 216, 216); /* Adds a subtle shadow effect */
+    margin-right: 5px; /* Adds some spacing between label and value */
+  }
+
+  .editMode .control-buttons{
+    text-align: center;
+    padding-bottom: 2%;
+    padding-top: 2%;
+  }
+
+  .editMode .control-button{
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+
+  .editMode .control-button:hover{
+    background-color: #0056b3;
+}
+
+/* END - EditMode elements */
+
+/* Advanced-settings elements */
+
+  .advanced-settings .control-buttons{
+    text-align: center;
+    padding-bottom: 2%;
+    padding-top: 2%;
+  }
+
+  .advanced-settings .control-button{
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+
+  .advanced-settings .control-button:hover{
+    background-color: #0056b3;
+}
+
+  .advanced-settings .flex{
+    /* display: flex; */
+    align-items: center;
+    margin-bottom: 10px; /* Add some spacing between the rows */
+  }
+
+  .advanced-settings .label{
+    font-weight: bold;
+    color: #007bff; /* Change this to your preferred color */
+    text-shadow: 1px 1px 2px rgb(216, 216, 216); /* Adds a subtle shadow effect */
+    margin-right: 5px; /* Adds some spacing between label and value */
+  }
+
+/* END - Advanced-settings elements */
+
+  
+  h3 {
+    padding-top: 0;
+    border-bottom: none;
+    color: #333333;
+  }
+
+  
+  input:not(.input-error) {
+    border-left: 0.3em solid green;
+  } 
+  
+  input {
+    /* flex: 0 1 100%; */
+    border-right: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    padding: 0.3em;
+    
+    border-top-right-radius: 0.3em;
+    border-bottom-right-radius: 0.3em;
+    width: 100%; /* Make inputs take full width of their container */
+    max-width: 100%; /* Ensure inputs don't exceed container width */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+  }
+  
+  
+  .select {
+    border-color: black;
+  }
+  
+  .button {
+    color: white;
+    border: none;
+    border-radius: 0.3em;
+    padding: 0.6em 1.2em;
+    margin-top: 1.5rem;
+    width: 60%;
+    outline: none;
+  }
+  
+  .i {
+    border: 1px solid;
+    border-right: none;
+    padding: 0.55em;
+    border-top-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em;
+    background-color: #e9ecef;
+  }
+  
+  .a {
+    color: #007bff;
+  }
+  
+  .a:hover {
+    cursor: pointer;
+  }
+  
+  
+  .field {
+    display: block;
+    padding-bottom: 0;
+  }
+  
+  /* errors  */
+  
+  p.error {
+    text-align: left;
+    border-radius: 0.3em;
+    color: red;
+    padding-top: 0;
+  }
+  
+  .input-error {
+    border-left-color: red;
+  }

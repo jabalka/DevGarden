@@ -1,0 +1,41 @@
+<form [formGroup]="form" class="login" (ngSubmit)="submitFormHandler()">
+
+    <fieldset>
+        <h2>Login Form</h2>
+
+        <p class="field field-icon">
+            <label for="email"><span><i class="fas fa-envelope"></i></span></label>
+            <input [class.input-error]="form.get('email')?.touched && !!form.get('email')?.errors" type="email" name="email" id="email" placeholder="Please enter your e-mail..." formControlName="email">
+        </p>
+        <p *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']" class="error">
+            Email is required!
+        </p>
+        <p *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['emailValidator']" class="error">
+            Email is not valid!
+        </p>
+
+        <p class="field field-icon">
+            <label for="password"><span><i class="fas fa-lock"></i></span></label>
+            <input [class.input-error]="form.get('password')?.touched && !!form.get('password')?.errors" [type]="isPasswordVisible ? 'text' : 'password'" name="password" id="password" placeholder="Please enter your password..." formControlName="password">
+            <button type="button" (click)="togglePasswordVisibility()" class="show-hide-button">
+                {{ isPasswordVisible ? 'Hide' : 'Show'}}
+            </button>
+        </p>
+        <p *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['required']" class="error">
+            Password is required!
+        </p>
+
+        <p *ngIf="errorMessage$ | async as errorMessage" class="error">
+            {{errorMessage}}
+        </p>
+
+        <button [disabled]="(isLoading$ | async) || form.invalid" class="login-button">Login</button>
+        <app-loader [isLoading]="(isLoading$ | async)"></app-loader>
+
+        <p class="text-center">
+            Have an account?
+            <a routerLink="/register">Register</a>
+        </p>
+
+    </fieldset>
+</form>

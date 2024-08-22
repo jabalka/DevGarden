@@ -1,0 +1,123 @@
+/*login register forms  */
+
+/* ---- errors ---- */
+p.error {
+  text-align: left;
+  border-radius: 0.3em;
+  color: red;
+  padding-top: 0;
+}
+
+.input-error {
+  border-left-color: red;
+}
+/* ----END---- */
+
+.field {
+  position: relative;
+}
+
+.show-hide-button {
+  position: absolute;
+  right: 10px; /* Position the button on the right */
+  top: 50%; /* Center the button vertically */
+  transform: translateY(-1%); /* Adjust position for better alignment */
+  border: none; /* Remove border */
+  background: transparent; /* Make background transparent */
+  cursor: pointer; /* Change cursor to pointer */
+  font-size: 14px; /* Set font size */
+  color: rgba(0, 0, 0, 0.581); /* Change text color to black */
+}
+
+
+form.login, form.register {
+    width: 40%;
+    margin: 2em auto 0;
+    text-align: center;
+  }
+  
+  .login fieldset, .register fieldset {
+    border-radius: 0.3em;
+    padding: 0.8em;
+    background-color: #ffffff;
+  }
+  
+  .login h2, .register h2 {
+    padding-top: 0;
+    border-bottom: none;
+  }
+  
+  .login p, .register p {
+    padding-bottom: 0;
+    padding-top: 1.5rem;
+  }
+  
+  input:not(.input-error) {
+    border-left: 0.3em solid green;
+  } 
+  
+  .login input, .register input {
+    flex: 0 1 100%;
+    border-right: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    padding: 0.3em;
+    
+    border-top-right-radius: 0.3em;
+    border-bottom-right-radius: 0.3em;
+  }
+  
+  .login select, .register select {
+    border-color: black;
+  }
+  
+  .login-button {
+    color: rgb(255, 255, 255);
+    font-weight: bolder;
+    border: none;
+    border-radius: 0.3em;
+    padding: 0.6em 1.2em;
+    margin-top: 1.5rem;
+    width: 60%;
+    outline: none;
+    background-color: rgba(85, 84, 84, 0.167); /* background color when disabled */
+  }
+
+  /* cursor for enabled state */
+  .login-button:not(:disabled) {
+    cursor: pointer; 
+    background-color: rgba(85, 84, 84, 0.604);
+    transition: background-color 0.1s cubic-bezier(1,-0.59,.58,1);
+  }
+
+  .login-button:not(:disabled):hover{
+    background-color: rgba(85, 84, 84, 0.93);
+  }
+  
+  .login i, .register i {
+    border: 1px solid;
+    border-right: none;
+    padding: 0.55em;
+    border-top-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em;
+    background-color: #e9ecef;
+  }
+  
+  .login a, .register a {
+    color: #007bff;
+  }
+  
+  .login a:hover, .register a:hover {
+    cursor: pointer;
+  }
+  
+  .register .tel {
+    padding-right: 0.8em;
+  }
+  
+  .login .field, .register .field {
+    display: flex;
+    padding-bottom: 0;
+  }
+  
+  

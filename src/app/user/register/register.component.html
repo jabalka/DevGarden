@@ -1,0 +1,84 @@
+<form [formGroup]="form" class="register" (ngSubmit)="submitHandler()">
+
+    <fieldset>
+        <h2>Registration Form</h2>
+
+        <!-- username -->
+        <!-- <p class="field field-icon">
+            <label for="username"><span><i class="fas fa-user"></i></span></label>
+            <input [class.input-error]="form.get('username')?.touched && !!form.get('username')?.errors" type="text" name="username" id="username" placeholder="Johny" formControlName="username">
+        </p>
+        <p *ngIf="form.get('username')?.touched && form.get('username')?.errors?.['required']" class="error">
+            Username is required!
+        </p>
+        <p *ngIf="form.get('username')?.touched && form.get('username')?.errors?.['minlenght']" class="error">
+            Username must be at least 5 characters!
+        </p> -->
+
+        <!-- email -->
+        <p class="field field-icon">
+            <label for="email"><span><i class="fas fa-envelope"></i></span></label>
+            <input [class.input-error]="form.get('email')?.touched && !!form.get('email')?.errors" type="email" name="email" id="email" placeholder="Please enter your e-mail..." formControlName="email">
+        </p>
+        <p *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']" class="error">
+            Email is required!
+        </p>
+        <p *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['emailValidator']" class="error">
+            Email is not valid!
+        </p>
+
+        <!-- telephone -->
+        <!-- <p class="field field-icon">
+            <label for="tel"><span><i class="fas fa-phone"></i></span></label>
+            <select name="select-tel" id="select-tel" class="tel">
+                <option value="00359">+359</option>
+            </select>
+            <input [class.input-error]="form.get('tel')?.touched && !!form.get('tel')?.errors" type="text" name="tel" id="tel" placeholder="885 888 888" formControlName="tel">
+        </p> -->
+
+        <!-- password -->
+        <p class="field field-icon">
+            <label for="password"><span><i class="fas fa-lock"></i></span></label>
+            <input [class.input-error]="form.get('password')?.touched && !!form.get('password')?.errors" [type]="isPasswordVisible ? 'text' : 'password'" name="password" id="password" placeholder="Please enter your password..." formControlName="password">
+            <button type="button" (click)="togglePasswordVisibility()" class="show-hide-button">
+                {{ isPasswordVisible ? 'Hide' : 'Show'}}
+            </button>
+        </p>
+        <p *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['required']" class="error">
+            Password is required!
+        </p>
+        <p *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['minLength']" class="error">
+            {{ form.get('password')?.errors?.['minLength'] }}
+        </p>
+        <p *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['hasNumber']" class="error">
+            {{ form.get('password')?.errors?.['hasNumber'] }}
+        </p>
+        <p *ngIf="form.get('password')?.touched && form.get('password')?.errors?.['hasSpecialChar']" class="error">
+            {{ form.get('password')?.errors?.['hasSpecialChar'] }}
+        </p>
+
+        <!-- rePassword -->
+        <p class="field field-icon">
+            <label for="rePassword"><span><i class="fas fa-lock"></i></span></label>
+            <input [class.input-error]="form.get('rePassword')?.touched && !!form.get('rePassword')?.errors" [type]="isRePasswordVisible ? 'text' : 'password'" name="rePassword" id="rePassword" placeholder="Please repeat your password..." formControlName="rePassword">
+            <button type="button" (click)="toggleRePasswordVisibility()" class="show-hide-button">
+                {{ isRePasswordVisible ? 'Hide' : 'Show'}}
+            </button>
+        </p>
+        <p *ngIf="form.get('rePassword')?.touched && form.get('rePassword')?.errors?.['required']" class="error">
+            Repeat Password is required!</p>
+        <p *ngIf="form.get('rePassword')?.touched && form.get('rePassword')?.errors?.['areTheSame'] && !form.get('rePassword')?.errors?.['required']" class="error">
+            {{ form.get('rePassword')?.errors?.['areTheSame'] }}</p>
+
+        <p *ngIf="errorMessage" class="error">{{errorMessage}}</p>
+
+        <button [disabled]="(isLoading$ | async) || form.invalid" class="register-button">Create Account</button>
+        <app-loader [isLoading]="isLoading$ | async"></app-loader>
+
+        <p class="text-center">
+            Have an account?
+            <a routerLink="/login">Log In</a>
+        </p>
+
+    </fieldset>
+</form>
