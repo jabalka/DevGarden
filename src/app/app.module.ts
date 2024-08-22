@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
@@ -39,6 +39,7 @@ import { ProjectModule } from './project/project.module';
     SharedModule,
     ProjectModule,
   ],
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     provideClientHydration(),
     AuthService,
