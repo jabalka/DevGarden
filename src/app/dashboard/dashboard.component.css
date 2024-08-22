@@ -1,0 +1,95 @@
+/* General styling for the dashboard */
+fieldset {
+  border-radius: 0.3em;
+  padding: 0.8em;
+  background-color: #ffffff;
+}
+
+.dashboard-projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .project-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: calc(33.333% - 20px); /* Three cards per row with 20px gap */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .project-info {
+    margin-bottom: 10px;
+  }
+  
+  .project-info label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .project-info span {
+    display: block;
+    color: #666;
+  }
+  
+  .control-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .control-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .control-buttons button:hover {
+    background-color: #0056b3;
+  }
+  
+  .control-buttons button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .pagination-controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pagination-controls button:hover {
+    background-color: #0056b3;
+  }
+  
+  .pagination-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls span {
+    font-weight: bold;
+    color: #333;
+  }

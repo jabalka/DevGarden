@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Confirm Deletion</h1>
+<div mat-dialog-content>
+  <p>Are you sure you want to delete your account? 
+    <br>
+    This action cannot be undone and your account will be permanently deleted from our database.
+    <br>
+    All your projects will be assigned to our ownership therefore you will lose any rights over them!
+    <br>
+    Do you still want to proceed?
+  </p>
+</div>
+<div class="control-buttons" mat-dialog-actions>
+  <button class="control-button" mat-button (click)="onNoClick()">Cancel</button>
+  <button class="control-button" mat-button color="warn" (click)="onYesClick()">Delete</button>
+</div>

@@ -1,0 +1,51 @@
+  <header>
+    <div class="mini-navbar-wrap">
+        <div class="logo-wrap">
+            <h1><a routerLink="/">Developers Garden</a></h1>
+        </div>
+        <div *ngIf="(isReady$ | async)" class="mini-navbar">
+            <ul *ngIf="!(isLogged$ | async)">
+                <li (click)="redirect2Login()">
+                    <a>Login</a>
+                </li>
+                <li (click)="redirect2Register()">
+                    <a>Register</a>
+                </li>
+            </ul>
+            <ul *ngIf="(isLogged$ | async)">
+              <div class="profile-pic-container">
+                <img *ngIf="profilePictureUrl; else defaultImage" [src]="profilePictureUrl" class="profile-pic-header" alt="Profile Picture" (click)="profile.click()"/>
+                <ng-template #defaultImage>
+                  <img class="profile-pic-header" src="assets/default-picture.png" alt="Default Profile Picture">
+                </ng-template>
+              </div>
+                <li #profile (click)="redirect2Profile()">                 
+                  <a> {{ getUsername(currentUser$ | async) }}</a>
+              </li>
+                <li (click)="logoutHandler()">
+                  <a>Logout</a>
+              </li>
+     
+    
+            </ul>
+        </div>  
+    </div>
+    <nav>
+        <ul *ngIf="!(isLogged$ | async)">
+            <li (click)="redirect2Projects()">
+                <a>Projects</a>
+            </li>
+        </ul>
+        <ul *ngIf="(isLogged$ | async)">
+            <li (click)="redirect2Projects()">
+                <a>Projects</a>
+            </li>
+            <li (click)="redirect2MyProjects()">
+                <a>My Projects</a>
+            </li>
+            <li (click)="redirect2NewProject()">
+                <a>New Project</a>
+            </li>
+        </ul>
+    </nav>
+</header>
