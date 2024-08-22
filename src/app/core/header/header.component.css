@@ -4,87 +4,13 @@ header {
 }
 
 ul {
-    padding: 0;
     display: flex;
     align-items: center;
     width: 75%;
     margin: auto;
 }
 
-ul span {
-    color: white;
-    padding: 0.5em;
-}
-
-.mini-navbar ul {
-    border: 1px solid #00d4ff;
-    border-radius: 0.3em;
-    padding-left: 0;
-    width: 100%;
-}
-
-li {
-    cursor: pointer;
-    color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.452);
-}
-
-li a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 10px; /* Adjust padding as needed */
-    text-decoration: none;
-}
-
-li:hover{
-    background-color: #f0f0f0a5; /* Highlight background on hover */
-    transition: 0.3s ease;
-}
-
-a {
-    text-decoration: none;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-nav {
-    border-top: 1px solid #00acf4;
-}
-
-.logo {
-    font-size: 1.3em;
-    color: white;
-    padding-bottom: 0;
-}
-
-.logo-wrap {
-    font-family: 'Parisienne', cursive;
-    letter-spacing: .5em;
-    margin: 0.5em 0;
-}
-
-.mini-navbar-wrap {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 75%;
-    margin: auto;
-}
-
-
-.mini-navbar ul {
-    background-color: #6ba1b8;
-    border-radius: 5px;
-}
-
-.mini-navbar ul li+li {
-    border-left: 1px solid lightgrey;
-    padding-left: .5em;
-}
-
+/*  Profile Pic Elements */
 .profile-pic-container {
     width: 40px; /* Set the desired size for the profile picture */
     height: 40px;
@@ -97,7 +23,7 @@ nav {
 }
 
 .profile-pic-container:hover {
-    background-color: #f0f0f0a5; /* Same background color as li:hover */
+    background-color: #ffffffbc; /* Same background color as li:hover */
 }
 
 .profile-pic-header {
@@ -110,5 +36,108 @@ nav {
 }
 
 .profile-pic-header:hover {
-    opacity: 0.8; /* Slightly reduce opacity on hover for a lighter effect */
+    opacity: 0.3; /* Slightly reduce opacity on hover for a lighter effect */
 }
+/* END -  Profile Pic Elements */
+
+/* MINI-NAVBAR navigation elements */
+
+.mini-navbar-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 75%;
+    margin: auto;
+}
+
+.mini-navbar ul {
+    background-color: #6ba1b8;
+    border: 1px solid #00d4ff;
+    border-radius: 0.3em;
+    padding: 0;
+    /* padding-right: 0; */
+    width: 100%;
+}
+
+.mini-navbar li {
+    cursor: pointer;
+    color: transparent;
+    box-sizing: border-box; 
+}
+
+.mini-navbar li:hover{
+    background-color: #f0f0f0a5; /* Highlight background on hover */
+    transition: 0.3s ease;
+}
+
+.mini-navbar li a{
+    display: block;
+    width: calc(100% - 10px); /* adjust width by subtracting padding */
+    height: 100%;
+    padding: 10px; 
+    text-decoration: none;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+.mini-navbar ul li+li {
+    border-left: 1px solid lightgrey;
+    padding: 0;
+}
+
+/* END - MINI-NAVBAR navigation elements */
+
+/* NAV navigation elements */
+nav {
+    border-top: 1px solid #00acf4;
+}
+
+nav li {
+    cursor: pointer;
+    color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.452);
+    box-sizing: border-box; 
+}
+nav li:hover {
+    background-color: #f0f0f0a5; /* Highlight background on hover */
+    transition: 0.3s ease;
+}
+
+nav li a {
+    display: block;
+    width: calc(100%); /* adjust width by subtracting padding */
+    height: 100%;
+    padding: 10px; 
+    text-decoration: none;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+/* END - NAV navigation elements */
+
+/* a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+} */
+
+.logo-wrap {
+    font-family: 'Parisienne', cursive;
+    letter-spacing: .5em;
+    margin: 0.5em 0;
+}
+
+.logo-wrap a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+

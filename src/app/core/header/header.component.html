@@ -1,48 +1,3 @@
-<!-- <header>
-    <div class="mini-navbar-wrap">
-      <div class="logo-wrap">
-        <h1><a routerLink="/">Developers Garden</a></h1>
-      </div>
-      <div *ngIf="(isReady$ | async)" class="mini-navbar">
-        <ul *ngIf="!(isLogged$ | async)">
-          <li>
-            <a (click)="redirect2Login()">Login</a>
-          </li>
-          <li>
-            <a (click)="redirect2Register()">Register</a>
-          </li>
-        </ul>
-        <ul *ngIf="(isLogged$ | async)">
-          <li>
-            <a (click)="redirect2Profile()">{{ getUsername(currentUser$ | async) }}</a>
-          </li>
-          <li>
-            <a (click)="logoutHandler()">Logout</a>
-         </li>
-        </ul>
-      </div>
-    </div>
-    <nav>
-      <ul *ngIf="!(isLogged$ | async)">
-        <li>
-            <a (click)="redirect2Projects()">Projects</a>
-        </li>
-      </ul>
-      <ul *ngIf="(isLogged$ | async)">
-        <li>
-          <a (click)="redirect2Projects()">Projects</a>
-      </li>
-        <li>
-            <a (click)="redirect2MyProjects()">My Projects</a>
-        </li>
-        <li>
-          <a (click)="redirect2NewProject()">New Project</a>
-        </li>
-      </ul>
-    </nav>
-  </header> -->
-
-
   <header>
     <div class="mini-navbar-wrap">
         <div class="logo-wrap">
@@ -64,12 +19,14 @@
                   <img class="profile-pic-header" src="assets/default-picture.png" alt="Default Profile Picture">
                 </ng-template>
               </div>
-                <li #profile (click)="redirect2Profile()">
-                    <a>{{ getUsername(currentUser$ | async) }}</a>
-                </li>
+                <li #profile (click)="redirect2Profile()">                 
+                  <a> {{ getUsername(currentUser$ | async) }}</a>
+              </li>
                 <li (click)="logoutHandler()">
-                    <a>Logout</a>
-                </li>
+                  <a>Logout</a>
+              </li>
+     
+    
             </ul>
         </div>  
     </div>
