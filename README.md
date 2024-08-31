@@ -109,8 +109,9 @@ To get started with the DevPlace Front-End application, follow these steps:
 
 ## Usage
   Once the application is running, you can access the following functionalities:
-    + Create a User Profile: Register a new user profile thus will be saved on the server side.
-         ```bash
+
+  + Create a User Profile: Register a new user profile thus will be saved on the server side.
+    ```bash
          register(data: any): Observable<any> {
             return this.http.post<UserModel>(apiUrl + 'user/register', data, {withCredentials: true}).pipe(
               tap((user: UserModel) => {
@@ -118,9 +119,9 @@ To get started with the DevPlace Front-End application, follow these steps:
               })
             );
          };
-     ```  
-    + Login: Login to an existing profile.
-         ```bash
+    ```
+  + Login: Login to an existing profile.
+    ```bash
          login(data: any): Observable<any> {
             return this.http.post<UserModel>(apiUrl + 'user/login', data, {withCredentials: true}).pipe(
               tap((user: UserModel) => {
@@ -128,9 +129,9 @@ To get started with the DevPlace Front-End application, follow these steps:
               })
             );
          };
-     ```  
+    ```  
     + Logout: Logout from profile and use the platform as a guest.
-             ```bash
+    ```bash
           logout(): Observable<any> {
             return this.http.get(apiUrl + 'user/logout', {withCredentials: true}).pipe(
               tap(() => {
@@ -139,9 +140,9 @@ To get started with the DevPlace Front-End application, follow these steps:
               })
             );
           };
-     ``` 
+    ``` 
     + Manage Profile: Update your profile information and upload or delete profile pictures.
-                 ```bash
+    ```bash
           updateProfile(data:any, file: File | null): Observable<any>{
             const formData = new FormData();
             for(const key in data){
@@ -160,7 +161,7 @@ To get started with the DevPlace Front-End application, follow these steps:
               })
             );
           };
-     ``` 
+    ``` 
     + Edit/Delete Projects: Use the project management interface to modify or remove projects.
     + View Projects: Browse through projects with pagination.
 
