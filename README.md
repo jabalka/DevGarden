@@ -109,11 +109,14 @@ To get started with the DevPlace Front-End application, follow these steps:
 
 ## Usage
   Once the application is running, you can access the following functionalities:
-
+  ### Users
+  ```bash
+      const apiUrl = 'http://localhost:3000/' + 'user/'; 
+  ```
   + Create a User Profile: Register a new user profile thus will be saved on the server side.
     ```bash
          function register(data: any): Observable<any> {
-            return this.http.post<UserModel>(apiUrl + 'user/register', data, {withCredentials: true}).pipe(
+            return this.http.post<UserModel>(apiUrl + 'register', data, {withCredentials: true}).pipe(
               tap((user: UserModel) => {
                 this.store.dispatch(register({ user}));
               })
@@ -122,18 +125,18 @@ To get started with the DevPlace Front-End application, follow these steps:
     ```
   + Login: Login to an existing profile.
     ```bash
-         login(data: any): Observable<any> {
-            return this.http.post<UserModel>(apiUrl + 'user/login', data, {withCredentials: true}).pipe(
+         function login(data: any): Observable<any> {
+            return this.http.post<UserModel>(apiUrl + 'login', data, {withCredentials: true}).pipe(
               tap((user: UserModel) => {
                 this.store.dispatch(login({user}));
               })
             );
          };
     ```  
-    + Logout: Logout from profile and use the platform as a guest.
+  + Logout: Logout from profile and use the platform as a guest.
     ```bash
-          logout(): Observable<any> {
-            return this.http.get(apiUrl + 'user/logout', {withCredentials: true}).pipe(
+          function logout(): Observable<any> {
+            return this.http.get(apiUrl + 'logout', {withCredentials: true}).pipe(
               tap(() => {
                 this.store.dispatch(logout());
                 this.navigationService.clearHistory();
@@ -141,9 +144,9 @@ To get started with the DevPlace Front-End application, follow these steps:
             );
           };
     ``` 
-    + Manage Profile: Update your profile information and upload or delete profile pictures.
+  + Manage Profile: Update your profile information and upload or delete profile pictures.
     ```bash
-          updateProfile(data:any, file: File | null): Observable<any>{
+          function updateProfile(data:any, file: File | null): Observable<any>{
             const formData = new FormData();
             for(const key in data){
               if(data.hasOwnProperty(key)) {
@@ -156,108 +159,67 @@ To get started with the DevPlace Front-End application, follow these steps:
             return this.http.put<any>(apiUrl + 'profile', formData, {headers: this.createHeaders(), withCredentials: true}).pipe(
               tap((user: any) => {
                 this.store.dispatch(updateUser({user}));
-                const newProfilePicUrl = `${environment.apiUrl}uploads/profilePics/${user.profilePicture}`; // here may arise problem with the URL
+                const newProfilePicUrl = `${environment.apiUrl}uploads/profilePics/${user.profilePicture}`;
                 this.profilePicChangeSubject.next(newProfilePicUrl);
               })
             );
           };
-    ``` 
-    + Edit/Delete Projects: Use the project management interface to modify or remove projects.
-    + View Projects: Browse through projects with pagination.
-
-  **Running the Server**
-  
-  To start the server, use the following command:
+    ```
+  + Delete Profile: User profile can be deleted if password verification has passed.
+    *Password Verification*
+    ```bash
+      function verifyPass(data: any): Observable<any> {
+          return this.http.post(apiUrl + 'user/verify', data);
+      };
+    ```
+    *Profile Delete*
+    ```bash
+       function deleteUser(userId: string): Observable<any> {
+            return this.http.delete<any>(apiUrl + 'profile/' + userId, {headers: this.createHeaders(), withCredentials: true}).pipe(
+              tap(() => {
+                this.store.dispatch(clearUserData());
+              })
+            );
+      };
+    ```
+  ### Projects
   ```bash
-  npm start
+      const apiUrl = 'http://localhost:3000/' + 'projects/';  
   ```
-## API Endpoints
-
-### Projects
-  + ***Get all projects:***
-     ```bash
-     GET /projects
-     ```
-      *Query parameters:*
-    - page (default: 1)
-    - pageSize (default: 2)
-    - _ownerId (optional)
-  + ***Create a new project:***
-     ```bash
-     POST /projects
-     ```
-      *Request body:*
-     ```bash
-     {
-      "title": "Project Title",
-      "description": "Project Description",
-      "language": "JavaScript",
-      "code": "console.log('Hello, world!');"
-     }
-       ```
-+ ***Get a project by ID:***
-     ```bash
-  GET /projects/:id
-   ```
-+ ***Update a project by ID:***
-     ```bash
-  PUT /projects/:id
-   ```
-+ ***Delete a project by ID:***
-     ```bash
-  DELETE /projects/:id
-   ```
-### Users
-+ ***Register a new user:***
-     ```bash
-      POST /user/register
-     ```
-    *Request body:*
-     ```bash
-  {
-    "email": "user@example.com",
-    "password": "password123!"
-  }
-     ```
-+ ***Login a user:***
+  + Create Project: Use the project management interface to create project.
     ```bash
-  POST /user/login
-   ```
-    *Request body:*
-  ```bash
-  {
-    "email": "user@example.com",
-    "password": "password123!"
-  }
-   ```
-+ ***Logout a user:***
+        function createProject(project: Project): Observable<Project> {
+            const headers = this.createHeaders();
+            return this.http.post<Project>(apiUrl, project, {headers: this.createHeaders(), withCredentials: true});
+        };
+    ```
+  + Edit Project: Use the project management interface to modify project.
     ```bash
-  GET /user/logout
-   ```
-+ ***Get user profile:***
+        function updateProject(projectId: string, project: Project): Observable<Project> {
+            return this.http.put<Project>(apiUrl + projectId, project, {headers: this.createHeaders(), withCredentials: true});
+        };
+    ```
+  + Delete Projects: Use the project management interface to modify or remove projects.
     ```bash
-  GET /user/profile
-   ```
-+ ***Update user profile:***
+        function deleteProject(id: string): Observable<void> {
+            return this.http.delete<void>(apiUrl + id, {headers: this.createHeaders(), withCredentials: true});
+        };
+    ```
+    + View Projects: Browse through projects with pagination.
     ```bash
-  PUT /user/profile
-   ```
-+ ***Delete user profile:***
+        function getProjects(page: number, pageSize: number): Observable<ProjectResponse> {
+            const url = `${apiUrl}?page=${page}&pageSize=${pageSize}`;
+            return this.http.get<ProjectResponse>(url);
+        }
+    ```
+    + View Own Projects: Browse through your own projects with pagination.
     ```bash
-  DELETE /user/profile/:id
-   ```
-+ ***Upload profile picture:***
-*Multipart/form-data with profilePicture field*
-    ```bash
-  PUT /user/profile-picture
-   ```
-
-## Middleware
-
-+ **Authentication (auth)**
-+ **Authorization Guards (isAuth, isOwner)**
-+ **CORS (corsMiddleware)**
-+ **Preloaders (preload)**
+        function getOwnerProjects(ownerId: string, page: number, pageSize: number): Observable<ProjectResponse> {
+            const url = `${apiUrl}?_ownerId=${ownerId}&page=${page}&pageSize=${pageSize}`;
+            return this.http.get<ProjectResponse>(url, {headers: this.createHeaders(), withCredentials: true});
+        };
+    ```
+    + Other UI functionalities throughout the application.
 
 ## Configuration
 Configuration settings are stored in the config directory. Ensure you set the appropriate environment variables in your .env file.
