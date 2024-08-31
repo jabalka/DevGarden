@@ -1,25 +1,3 @@
-
-
-
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-
-
 # DevGarden
 
 ## Table of Contents
@@ -30,9 +8,8 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 - [Installation](#installation)
 - [Usage](#usage)
   - [API Endpoints](#api-endpoints)
-    - [Projects](#projects)
     - [Users](#users)
-- [Middleware](#middleware)
+    - [Projects](#projects)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -40,8 +17,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Introduction
 
 DevPlace Front-End is a web application built with Angular, designed to provide a platform for users to share, manage, and interact with their projects. Users can create, edit, delete, and preview projects, as well as manage their profiles and profile pictures. The application includes features such as pagination and local storage for user session management.
-To full-stack the app you can go to the back-end side on [here](https://github.com/jabalka/DevPlace).
+**To full-stack the app you can go to the back-end side on [here](https://github.com/jabalka/DevPlace).**
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.10.
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+
 
 ## Features
 
@@ -100,12 +81,28 @@ To get started with the DevPlace Front-End application, follow these steps:
 3. **Install dependencies:**
      ```bash
      npm install
+     ``` 
+4. **Build the Application**
+     ```bash
+     ng build
      ```  
-4. **Serve the Application**
+5. **Serve the Application**
      ```bash
      ng s
      ```  
   The application will be available at http://localhost:4200.
+
+6. **Running unit tests**
+     ```bash
+     ng test
+     ```  
+  *This code is to execute the unit tests via [Karma](https://karma-runner.github.io).*
+
+7. **Running end-to-end tests**
+     ```bash
+     ng e2e
+     ```  
+  *This code is to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end     testing capabilities.*
 
 ## Usage
   Once the application is running, you can access the following functionalities:
