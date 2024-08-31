@@ -60,29 +60,29 @@ This application is built using the following technologies:
 
 ### Dependencies
 The application depends on the following packages:
-     ```bash
-     "dependencies": {
-  "@angular/animations": "^17.0.0",
-  "@angular/common": "^17.0.0",
-  "@angular/compiler": "^17.0.0",
-  "@angular/core": "^17.0.0",
-  "@angular/forms": "^17.0.0",
-  "@angular/material": "^17.3.10",
-  "@angular/platform-browser": "^17.0.0",
-  "@angular/platform-browser-dynamic": "^17.0.0",
-  "@angular/platform-server": "^17.3.11",
-  "@angular/router": "^17.0.0",
-  "@angular/ssr": "^18.0.3",
-  "@ngrx/effects": "^18.0.0",
-  "@ngrx/store": "^17.1.1",
-  "@ngrx/store-devtools": "^17.1.1",
-  "bson": "^4.6.4",
-  "rxjs": "^7.8.0",
-  "swiper": "^11.1.10",
-  "tslib": "^2.3.0",
-  "zone.js": "~0.14.2"
-  }
-     ```  
+  ```bash
+       "dependencies": {
+          "@angular/animations": "^17.0.0",
+          "@angular/common": "^17.0.0",
+          "@angular/compiler": "^17.0.0",
+          "@angular/core": "^17.0.0",
+          "@angular/forms": "^17.0.0",
+          "@angular/material": "^17.3.10",
+          "@angular/platform-browser": "^17.0.0",
+          "@angular/platform-browser-dynamic": "^17.0.0",
+          "@angular/platform-server": "^17.3.11",
+          "@angular/router": "^17.0.0",
+          "@angular/ssr": "^18.0.3",
+          "@ngrx/effects": "^18.0.0",
+          "@ngrx/store": "^17.1.1",
+          "@ngrx/store-devtools": "^17.1.1",
+          "bson": "^4.6.4",
+          "rxjs": "^7.8.0",
+          "swiper": "^11.1.10",
+          "tslib": "^2.3.0",
+          "zone.js": "~0.14.2"
+      }
+  ```  
   
 ## Installation
 To get started with the DevPlace Front-End application, follow these steps:
@@ -112,7 +112,7 @@ To get started with the DevPlace Front-End application, follow these steps:
 
   + Create a User Profile: Register a new user profile thus will be saved on the server side.
     ```bash
-         register(data: any): Observable<any> {
+         function register(data: any): Observable<any> {
             return this.http.post<UserModel>(apiUrl + 'user/register', data, {withCredentials: true}).pipe(
               tap((user: UserModel) => {
                 this.store.dispatch(register({ user}));
