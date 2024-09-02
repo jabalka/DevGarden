@@ -82,23 +82,19 @@ To get started with the DevPlace Front-End application, follow these steps:
      ```bash
      npm install
      ``` 
-4. **Build the Application**
-     ```bash
-     ng build
-     ```  
-5. **Serve the Application**
+4. **Serve the Application**
      ```bash
      ng s
      ```  
   The application will be available at http://localhost:4200.
 
-6. **Running unit tests**
+5. **Running unit tests**
      ```bash
      ng test
      ```  
   *This code is to execute the unit tests via [Karma](https://karma-runner.github.io).*
 
-7. **Running end-to-end tests**
+6. **Running end-to-end tests**
      ```bash
      ng e2e
      ```  
