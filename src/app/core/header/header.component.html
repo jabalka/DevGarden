@@ -13,20 +13,24 @@
                 </li>
             </ul>
             <ul *ngIf="(isLogged$ | async)">
-              <div class="profile-pic-container">
+              <!-- <div class="profile-pic-container">
                 <img *ngIf="profilePictureUrl; else defaultImage" [src]="profilePictureUrl" class="profile-pic-header" alt="Profile Picture" (click)="profile.click()"/>
                 <ng-template #defaultImage>
                   <img class="profile-pic-header" src="assets/default-picture.png" alt="Default Profile Picture">
                 </ng-template>
-              </div>
-                <li #profile (click)="redirect2Profile()">                 
-                  <a> {{ getUsername(currentUser$ | async) }}</a>
-              </li>
-                <li (click)="logoutHandler()">
-                  <a>Logout</a>
-              </li>
+              </div> -->
+                <button #profile class="custom-button" (click)="redirect2Profile()"> 
+                        <img *ngIf="profilePictureUrl; else defaultImage" [src]="profilePictureUrl" class="profile-pic-header" alt="Profile Picture" (click)="profile.click()"/>
+                        <ng-template #defaultImage>
+                          <img class="profile-pic-header" src="assets/default-picture.png" alt="Default Profile Picture">
+                        </ng-template>       
+                  <a class="profile-a"> {{ getUsername(currentUser$ | async) }}</a>
+              </button>
+                <button class="custom-button" (click)="logoutHandler()">
+                  <a class="logout-a">Logout</a>
+              </button>
      
-    
+              
             </ul>
         </div>  
     </div>

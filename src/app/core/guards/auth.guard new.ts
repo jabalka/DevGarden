@@ -15,40 +15,38 @@ export const authGuard: CanActivateChildFn = (
 
   loadingService.show();
 
-    return authService.currentUser$.pipe(
-    first(),
+  return authService.currentUser$.pipe(
     switchMap(user => {
       if(user){
         return of(true);
       } else {
-        return from( router.navigate(['user/login'])).pipe(
+        return from( router.navigate(['/login'])).pipe(
           map(() => false)
         );
       }
-    }),
-    finalize(() => {
-      loadingService.hide();
-    }),
-    catchError(() => {
-      loadingService.hide();
-      return of(false);
     })
   );
 };
 
-  // return authService.currentUser$.pipe(
-  //   switchMap(user => {
-  //     if(user){
-  //       return of(true);
-  //     } else {
-  //       return from( router.navigate(['/login'])).pipe(
-  //         map(() => false)
-  //       );
-  //     }
-  //   })
-  // );
 
 
-
-
-
+//   return authService.currentUser$.pipe(
+//     first(),
+//     switchMap(user => {
+//       if(user){
+//         return of(true);
+//       } else {
+//         return from( router.navigate(['/login'])).pipe(
+//           map(() => false)
+//         );
+//       }
+//     }),
+//     finalize(() => {
+//       loadingService.hide();
+//     }),
+//     catchError(() => {
+//       loadingService.hide();
+//       return of(false);
+//     })
+//   );
+// };

@@ -5,8 +5,6 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProjectDetailComponent } from './project/project-detail/project-detail.component';
-
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './+store';
 
@@ -26,7 +24,6 @@ import { ProjectModule } from './project/project.module';
     AppComponent,
     HomeComponent,
     DashboardComponent,
-
   ],
   imports: [
     BrowserModule,

@@ -49,7 +49,7 @@ export class NewProjectComponent implements OnInit {
     const project = this.form.value;
     this.projectService.createProject(project).subscribe({
       next: () => {
-        this.router.navigate(['/my-projects']);
+        this.router.navigate(['/projects/my-projects']);
       },
       error: (err) => {
         this.errorMessage = err.error.message.replace(/\n/g, '<br>');

@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { loadAuthState } from '../+store/load-auth-state';
 import { RouterModule } from '@angular/router';
+import { UserRoutingModule } from './user-routing.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { RouterModule } from '@angular/router';
 
     SharedModule,
     RouterModule,
+    UserRoutingModule
   ],
   providers: [
     UserService,

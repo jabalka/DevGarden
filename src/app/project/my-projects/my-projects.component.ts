@@ -53,7 +53,11 @@ export class MyProjectsComponent implements OnInit {
   }
 
   navigateToDetail(projectId: string): void {
-    this.router.navigate(['/projects/', projectId])
+    this.router.navigate(['/projects/', projectId]);
+  }
+  
+  goToCreate(): void {
+    this.router.navigate(['/projects/new']);
   }
 
   goToNextPage(): void {

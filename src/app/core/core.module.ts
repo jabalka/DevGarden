@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './auth.service';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard new';
 import { ConfirmDelDialogComponent } from './account-del-dialog/confirm-del-dialog.component';
 
 

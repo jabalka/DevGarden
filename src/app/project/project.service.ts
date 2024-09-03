@@ -38,6 +38,7 @@ export class ProjectService {
   }
 
   getProjectsByOwner(ownerId: string): Observable<any> {
+
     return this.http.get<any>(apiUrl + 'projects/' + ownerId , {headers: this.createHeaders(), withCredentials: true})
   }
 

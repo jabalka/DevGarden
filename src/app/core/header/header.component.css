@@ -8,37 +8,11 @@ ul {
     align-items: center;
     width: 75%;
     margin: auto;
+    list-style: none;
+    padding: 0;
 }
 
-/*  Profile Pic Elements */
-.profile-pic-container {
-    width: 40px; /* Set the desired size for the profile picture */
-    height: 40px;
-    border-radius: 50%; /* Make the container circular */
-    overflow: hidden; /* Hide the overflow to show only part of the image */
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
-}
 
-.profile-pic-container:hover {
-    background-color: #ffffffbc; /* Same background color as li:hover */
-}
-
-.profile-pic-header {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Scale the image to cover the container */
-    object-position: center; /* Position the image in the center */
-    border-radius: 50%; /* Make the image itself circular */
-    transition: opacity 0.3s ease; /* Smooth transition for opacity */
-}
-
-.profile-pic-header:hover {
-    opacity: 0.3; /* Slightly reduce opacity on hover for a lighter effect */
-}
-/* END -  Profile Pic Elements */
 
 /* MINI-NAVBAR navigation elements */
 
@@ -120,12 +94,79 @@ nav li a {
 }
 /* END - NAV navigation elements */
 
-/* a {
-    text-decoration: none;
-    color: white;
+/*  Profile Pic Elements */
+.profile-pic-container:hover {
+    background-color: #ffffffbc; /* Same background color as li:hover */
+}
+
+.profile-pic-header {
+    width: 40px;
+    height: 40px;
+    object-fit: cover; /* Scale the image to cover the container */
+    border-radius: 50%; /* Make the image itself circular */
+    transition: opacity 0.3s ease; /* Smooth transition for opacity */
+}
+
+.profile-pic-header:hover {
+    opacity: 0.3; /* Slightly reduce opacity on hover for a lighter effect */
+}
+/* END -  Profile Pic Elements */
+
+/* Button Styles */
+ul button {
     cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
     font-weight: bold;
-} */
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: calc(100%); /* adjust width */
+    height: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    border-radius: 0.3em;
+}
+
+/* END Button styles */
+
+ul button:hover {
+    background-color: #f0f0f0a5; /* Highlight background on hover */
+    transition: 0.3s ease;
+}
+
+/* for Profile Button only */
+.profile-a{
+    padding-left: 8px;
+    padding-right: 12px;
+}
+/* for logout Button only */
+.logout-a{
+    padding: 12px;
+}
+
+ul button a {
+    color: white;
+    text-decoration: none;
+}
+
+/* add vertical line between buttons */
+ul button.custom-button + button.custom-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px; /* this value based on the width of the line */
+    transform: translateY(-50%);
+    width: 2px; /* set the desired width of the line */
+    height: 100%;
+    background-color: lightgrey;
+    border-radius: 0.3em;
+}
+ul button.custom-button:first-child::before {
+    display: none; /* remove the line before the first button */
+}
 
 .logo-wrap {
     font-family: 'Parisienne', cursive;

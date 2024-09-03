@@ -5,27 +5,23 @@ import { ProjectDetailComponent } from './project-detail/project-detail.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProjectEditComponent } from './project-edit/project-edit.component';
 import { MyProjectsComponent } from './my-projects/my-projects.component';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { ProjectRoutingModule } from './project-routing.module';
+
+const COMPONENTS = [NewProjectComponent,
+  ProjectDetailComponent,
+  ProjectEditComponent,
+  MyProjectsComponent,];
+
+const MODULES = [ReactiveFormsModule,
+  FormsModule,
+  CommonModule,
+  RouterModule,
+  ProjectRoutingModule]
 
 @NgModule({
-  declarations: [
-    NewProjectComponent,
-    ProjectDetailComponent,
-    ProjectEditComponent,
-    MyProjectsComponent,
-
-  ],
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    CommonModule,
-    RouterModule,
-  ],
-  exports: [
-    NewProjectComponent,
-    ProjectDetailComponent,
-    ProjectEditComponent,
-    MyProjectsComponent
-  ]
+  declarations: [...COMPONENTS],
+  imports: [...MODULES],
+  exports: [...COMPONENTS]
 })
 export class ProjectModule { }

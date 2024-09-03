@@ -2,11 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
-import { IUser, UserModel } from '../../user/user.model';
-import { Store, select } from '@ngrx/store';
+import { UserModel } from '../../user/user.model';
+import { Store } from '@ngrx/store';
 import { IAppState } from '../../+store';
-import { selectCurrentUser } from '../../+store/selectors';
-import { setUser } from '../../+store/auth/actions';
 import { NavigationService } from '../navigation.service';
 import { environment } from '../../environments/environment';
 import { UserService } from '../../user/user.service';
@@ -30,6 +28,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   currentUser = this.authService.currentUser;
   currentUserSubscription?: Subscription;
   profilePicChangeSubscription?: Subscription;
+  authSubscription?: Subscription;
   
   constructor(
     private authService: AuthService,
@@ -42,20 +41,33 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    if (this.currentUser.profilePicture) {
-      this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${this.currentUser.profilePicture}`;
-    }
+    // if (this.currentUser.profilePicture) {
+    //   this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${this.currentUser.profilePicture}`;
+    // }
 
     // subscribe to profile pic changes
     this.profilePicChangeSubscription = this.userService.profilePicChange$.subscribe(newProfilePicUrl => {
       if(newProfilePicUrl){
         this.profilePictureUrl = newProfilePicUrl;
       }
+    });
+
+    // subscribe to auth state changes
+    this.authSubscription = this.authService.currentUser$.subscribe(user => {
+      this.updateProfilePictureUrl(user);
     })
   }
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.profilePicChangeSubscription?.unsubscribe();
+  }
+
+  updateProfilePictureUrl(user: UserModel | null): void {
+    if( user && user.profilePicture) {
+      this.profilePictureUrl = `${environment.apiUrl}uploads/profilePics/${user.profilePicture}`;
+    } else {
+      this.profilePictureUrl = null;
+    }
   }
 
   getUsername(user: UserModel | null): string {
@@ -67,21 +79,22 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   logoutHandler(): void{
     this.authService.logout().subscribe(() => this.router.navigate(['/']));
+    this.profilePictureUrl = null
   }
 
   redirect2Login(){
     this.navigationService.clearCurrentPage();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/user/login']);
   }
 
   redirect2Register(){
     this.navigationService.clearCurrentPage();
-    this.router.navigate(['/register']);
+    this.router.navigate(['/user/register']);
   }
 
   redirect2Profile(){
     this.navigationService.clearCurrentPage();
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/user/profile']);
   }
 
   redirect2Projects(){
@@ -91,7 +104,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   redirect2MyProjects(){
     this.navigationService.clearCurrentPage();
-    this.router.navigate(['/my-projects']);
+    this.router.navigate(['/projects/my-projects']);
   }
 
   redirect2NewProject(){
