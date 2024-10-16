@@ -1,16 +1,22 @@
-<fieldset>
-    
-<!-- <swiper-container>
-  <swiper-slide>Slide 1</swiper-slide>
-  <swiper-slide>Slide 2</swiper-slide>
-  <swiper-slide>Slide 3</swiper-slide>
-  <swiper-slide>Slide ...</swiper-slide>
-</swiper-container> -->
-
-<!-- <swiper-container>
-  <swiper-slide>Slide 1</swiper-slide>
-  <swiper-slide>Slide 2</swiper-slide>
-  <swiper-slide>Slide 3</swiper-slide>
-  <swiper-slide>Slide ...</swiper-slide>
-</swiper-container> -->
+<fieldset *ngIf="projects.length > 0; else noProjects">
+  <swiper-container
+    [slidesPerView]="1"
+    [spaceBetween]="1"
+    [navigation]="true"
+    [pagination]="{ clickable: true }"
+    [loop]="false"
+    [autoHeight]="true"
+    class="mySwiper"
+  >
+    <swiper-slide *ngFor="let project of projects">
+      <div class="project-card">
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description }}</p>
+      </div>
+    </swiper-slide>
+  </swiper-container>
 </fieldset>
+
+<ng-template #noProjects>
+  <p>No projects available at the moment.</p>
+</ng-template>

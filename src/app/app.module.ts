@@ -35,15 +35,15 @@ import { ProjectModule } from './project/project.module';
     UserModule,
     SharedModule,
     ProjectModule,
-  ],
-  // schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [
-    provideClientHydration(),
-    AuthService,
-    ProjectService,
-    provideHttpClient(withFetch())
 
   ],
-  bootstrap: [AppComponent]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    provideClientHydration(),
+    provideHttpClient(withFetch()),
+    AuthService,
+    ProjectService,
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

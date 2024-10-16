@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { ProjectService } from '../project/project.service';
 import { Router } from '@angular/router';
 import { NavigationService } from '../core/navigation.service';
 import { Project, ProjectResponse } from '../project/project.model';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
-})
-export class HomeComponent {
+  styleUrl: './home.component.css',
 
+})
+export class HomeComponent implements OnInit{
   projects: Project[] = [];
   totalProjects: number = 0;
   currentPage: number = 0;
@@ -22,6 +23,11 @@ export class HomeComponent {
     private navigationService: NavigationService,
   ){
     this.projects = [];
+  }
+
+  ngOnInit(): void {
+    console.log(this.projects)
+    this.getProjects(this.currentPage);
   }
 
   getProjects(page: number): void {
