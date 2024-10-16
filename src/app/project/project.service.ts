@@ -27,6 +27,10 @@ export class ProjectService {
     return headers;
   }
 
+  getProjectsNoPagination(): Observable<ProjectResponse> {
+    return this.http.get<ProjectResponse>(apiUrl);
+  }
+
   getProjects(page: number, pageSize: number): Observable<ProjectResponse> {
     const url = `${apiUrl}?page=${page}&pageSize=${pageSize}`;
     return this.http.get<ProjectResponse>(url);
